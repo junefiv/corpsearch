@@ -6607,15 +6607,7 @@
     "디지털대성": {
         "corp_info": {
             "market": "KOSDAQ",
-            "corp_code": "00398808",
-            "stock_code": "068930",
-            "ceo_nm": "김희선",
-            "jurir_no": "1101111902835",
-            "bizr_no": "1148196124",
-            "adres": "서울특별시 서초구  방배로 181 단우빌딩",
-            "hm_url": "www.digitaldaesung.com",
-            "est_dt": "20000310",
-            "induty_code": "855"
+            "stock_code": "068930"
         },
         "treasury_info": {
             "직접취득": {
@@ -6623,15 +6615,15 @@
                 "우선주": 0
             },
             "신탁계약에 의한취득": {
-                "우선주": 0,
-                "보통주": 0
+                "보통주": 0,
+                "우선주": 0
             },
             "기타취득": {
                 "보통주": 1471742,
                 "우선주": 0
             },
             "총계": {
-                "보통주": 1471742,
+                "보통주": 2943484,
                 "우선주": 0
             }
         },
@@ -6898,13 +6890,806 @@
                 "nm": "계",
                 "relate": "N/A",
                 "trmend_posesn_stock_co": 0,
-                "trmend_posesn_stock_qota_rt": 0
+                "trmend_posesn_stock_qota_rt": 0.0
             }
         ],
         "issued_share": {
-            "istc_totqy": 27675342,
-            "tesstk_co": 1471742,
-            "distb_stock_co": 26203600
+            "보통주": {
+                "istc_totqy": 27675342,
+                "now_to_totqy": 0,
+                "distb_stock_co": 26203600
+            },
+            "합계": {
+                "istc_totqy": 27675342,
+                "now_to_totqy": 0,
+                "distb_stock_co": 26203600
+            },
+            "비고": {
+                "istc_totqy": 0,
+                "now_to_totqy": 0,
+                "distb_stock_co": 0
+            }
+        },
+        "contribution_info": [
+            {
+                "inv_prm": "(주)이감",
+                "frst_acqs_de": "2017.12.06",
+                "invstmnt_purps": "경영참가",
+                "trmend_blce_qy": "6,788,458",
+                "trmend_blce_qota_rt": "84.05"
+            },
+            {
+                "inv_prm": "DIGITAL DAESUNG VIETNAM\nLIMITED COMPANY",
+                "frst_acqs_de": "2018.05.21",
+                "invstmnt_purps": "경영참가",
+                "trmend_blce_qy": "-",
+                "trmend_blce_qota_rt": "100.00"
+            },
+            {
+                "inv_prm": "ECOPARK DAESUNG INTERNATIONAL\nEDUCATION CO.,LTD",
+                "frst_acqs_de": "2019.10.02",
+                "invstmnt_purps": "경영참가",
+                "trmend_blce_qy": "-",
+                "trmend_blce_qota_rt": "50.00"
+            },
+            {
+                "inv_prm": "강남대성수능연구소(주)",
+                "frst_acqs_de": "2021.02.01",
+                "invstmnt_purps": "투자",
+                "trmend_blce_qy": "284,200",
+                "trmend_blce_qota_rt": "29.00"
+            },
+            {
+                "inv_prm": "(주)이르테크",
+                "frst_acqs_de": "2022.01.27",
+                "invstmnt_purps": "투자",
+                "trmend_blce_qy": "30,500",
+                "trmend_blce_qota_rt": "37.11"
+            },
+            {
+                "inv_prm": "강대마이맥(주)",
+                "frst_acqs_de": "2019.11.20",
+                "invstmnt_purps": "투자",
+                "trmend_blce_qy": "100,000",
+                "trmend_blce_qota_rt": "10.00"
+            },
+            {
+                "inv_prm": "(주)바이웨이",
+                "frst_acqs_de": "2023.10.27",
+                "invstmnt_purps": "투자",
+                "trmend_blce_qy": "72,000",
+                "trmend_blce_qota_rt": "44.44"
+            },
+            {
+                "inv_prm": "(주)그레이스케일",
+                "frst_acqs_de": "2023.11.09",
+                "invstmnt_purps": "투자",
+                "trmend_blce_qy": "9,681",
+                "trmend_blce_qota_rt": "7.50"
+            },
+            {
+                "inv_prm": "합계",
+                "frst_acqs_de": "-",
+                "invstmnt_purps": "-",
+                "trmend_blce_qy": "7,284,839",
+                "trmend_blce_qota_rt": "-"
+            }
+        ],
+        "financial_info": {
+            "BS": [
+                {
+                    "account_nm": "자산총계",
+                    "thstrm_amount": 221746087640,
+                    "currency": "KRW"
+                },
+                {
+                    "account_nm": "유동자산",
+                    "thstrm_amount": 31547397853,
+                    "currency": "KRW"
+                },
+                {
+                    "account_nm": "현금및현금성자산",
+                    "thstrm_amount": 16307824826,
+                    "currency": "KRW"
+                },
+                {
+                    "account_nm": "재고자산",
+                    "thstrm_amount": 2680833691,
+                    "currency": "KRW"
+                },
+                {
+                    "account_nm": "기타유동자산",
+                    "thstrm_amount": 2050785849,
+                    "currency": "KRW"
+                },
+                {
+                    "account_nm": "단기금융자산",
+                    "thstrm_amount": 1311960856,
+                    "currency": "KRW"
+                },
+                {
+                    "account_nm": "매출채권및기타채권",
+                    "thstrm_amount": 9195992631,
+                    "currency": "KRW"
+                },
+                {
+                    "account_nm": "비유동자산",
+                    "thstrm_amount": 190198689787,
+                    "currency": "KRW"
+                },
+                {
+                    "account_nm": "순확정급여자산",
+                    "thstrm_amount": 1699533867,
+                    "currency": "KRW"
+                },
+                {
+                    "account_nm": "장기금융자산",
+                    "thstrm_amount": 1858801435,
+                    "currency": "KRW"
+                },
+                {
+                    "account_nm": "장기매출채권및기타채권",
+                    "thstrm_amount": 12453768117,
+                    "currency": "KRW"
+                },
+                {
+                    "account_nm": "이연법인세자산",
+                    "thstrm_amount": 312394549,
+                    "currency": "KRW"
+                },
+                {
+                    "account_nm": "무형자산",
+                    "thstrm_amount": 68057519895,
+                    "currency": "KRW"
+                },
+                {
+                    "account_nm": "공동기업및관계기업투자",
+                    "thstrm_amount": 19404348005,
+                    "currency": "KRW"
+                },
+                {
+                    "account_nm": "종속기업투자",
+                    "thstrm_amount": 6033666226,
+                    "currency": "KRW"
+                },
+                {
+                    "account_nm": "기타비유동자산",
+                    "thstrm_amount": 11002351019,
+                    "currency": "KRW"
+                },
+                {
+                    "account_nm": "유형자산",
+                    "thstrm_amount": 69376306674,
+                    "currency": "KRW"
+                },
+                {
+                    "account_nm": "자본잉여금",
+                    "thstrm_amount": 100004634118,
+                    "currency": "KRW"
+                },
+                {
+                    "account_nm": "자본조정",
+                    "thstrm_amount": -6158713825,
+                    "currency": "KRW"
+                },
+                {
+                    "account_nm": "자본총계",
+                    "thstrm_amount": 148058427752,
+                    "currency": "KRW"
+                },
+                {
+                    "account_nm": "자본금",
+                    "thstrm_amount": 14911244500,
+                    "currency": "KRW"
+                },
+                {
+                    "account_nm": "이익잉여금",
+                    "thstrm_amount": 39301262959,
+                    "currency": "KRW"
+                },
+                {
+                    "account_nm": "부채및자본총계",
+                    "thstrm_amount": 221746087640,
+                    "currency": "KRW"
+                },
+                {
+                    "account_nm": "유동부채",
+                    "thstrm_amount": 61753688801,
+                    "currency": "KRW"
+                },
+                {
+                    "account_nm": "유동 리스부채",
+                    "thstrm_amount": 1697704121,
+                    "currency": "KRW"
+                },
+                {
+                    "account_nm": "단기충당부채",
+                    "thstrm_amount": 609614386,
+                    "currency": "KRW"
+                },
+                {
+                    "account_nm": "당기법인세부채",
+                    "thstrm_amount": 796999841,
+                    "currency": "KRW"
+                },
+                {
+                    "account_nm": "기타 유동부채",
+                    "thstrm_amount": 26171438841,
+                    "currency": "KRW"
+                },
+                {
+                    "account_nm": "단기금융부채",
+                    "thstrm_amount": 15400000000,
+                    "currency": "KRW"
+                },
+                {
+                    "account_nm": "매입채무및기타채무",
+                    "thstrm_amount": 17077931612,
+                    "currency": "KRW"
+                },
+                {
+                    "account_nm": "부채총계",
+                    "thstrm_amount": 73687659888,
+                    "currency": "KRW"
+                },
+                {
+                    "account_nm": "비유동부채",
+                    "thstrm_amount": 11933971087,
+                    "currency": "KRW"
+                },
+                {
+                    "account_nm": "장기매입채무 및 기타채무",
+                    "thstrm_amount": 3915379999,
+                    "currency": "KRW"
+                },
+                {
+                    "account_nm": "이연법인세부채",
+                    "thstrm_amount": 0,
+                    "currency": "KRW"
+                },
+                {
+                    "account_nm": "비유동 리스부채",
+                    "thstrm_amount": 4598491123,
+                    "currency": "KRW"
+                },
+                {
+                    "account_nm": "장기충당부채",
+                    "thstrm_amount": 1134725246,
+                    "currency": "KRW"
+                },
+                {
+                    "account_nm": "기타 비유동 부채",
+                    "thstrm_amount": 2285374719,
+                    "currency": "KRW"
+                }
+            ],
+            "IS": [],
+            "CIS": [
+                {
+                    "account_nm": "영업이익",
+                    "thstrm_amount": 14594082343,
+                    "currency": "KRW"
+                },
+                {
+                    "account_nm": "기타수익",
+                    "thstrm_amount": 496424306,
+                    "currency": "KRW"
+                },
+                {
+                    "account_nm": "기타비용",
+                    "thstrm_amount": 3718196192,
+                    "currency": "KRW"
+                },
+                {
+                    "account_nm": "판매비와관리비",
+                    "thstrm_amount": 58862491147,
+                    "currency": "KRW"
+                },
+                {
+                    "account_nm": "당기총포괄이익",
+                    "thstrm_amount": 12819693603,
+                    "currency": "KRW"
+                },
+                {
+                    "account_nm": "매출원가",
+                    "thstrm_amount": 108929372607,
+                    "currency": "KRW"
+                },
+                {
+                    "account_nm": "기본주당이익",
+                    "thstrm_amount": 488,
+                    "currency": "KRW"
+                },
+                {
+                    "account_nm": "희석주당이익",
+                    "thstrm_amount": 488,
+                    "currency": "KRW"
+                },
+                {
+                    "account_nm": "금융비용",
+                    "thstrm_amount": 784598367,
+                    "currency": "KRW"
+                },
+                {
+                    "account_nm": "금융수익",
+                    "thstrm_amount": 4728265167,
+                    "currency": "KRW"
+                },
+                {
+                    "account_nm": "매출총이익",
+                    "thstrm_amount": 73456573490,
+                    "currency": "KRW"
+                },
+                {
+                    "account_nm": "법인세비용",
+                    "thstrm_amount": 2400671135,
+                    "currency": "KRW"
+                },
+                {
+                    "account_nm": "기타포괄손익",
+                    "thstrm_amount": -95612519,
+                    "currency": "KRW"
+                },
+                {
+                    "account_nm": "확정급여제도의 재측정요소",
+                    "thstrm_amount": -95612519,
+                    "currency": "KRW"
+                },
+                {
+                    "account_nm": "당기순이익",
+                    "thstrm_amount": 12915306122,
+                    "currency": "KRW"
+                },
+                {
+                    "account_nm": "법인세비용차감전순이익",
+                    "thstrm_amount": 15315977257,
+                    "currency": "KRW"
+                },
+                {
+                    "account_nm": "매출액",
+                    "thstrm_amount": 182385946097,
+                    "currency": "KRW"
+                }
+            ],
+            "CF": [
+                {
+                    "account_nm": "기초의 현금및현금성자산",
+                    "thstrm_amount": 7819100075,
+                    "currency": "KRW"
+                },
+                {
+                    "account_nm": "기말의 현금및현금성자산",
+                    "thstrm_amount": 16307824826,
+                    "currency": "KRW"
+                },
+                {
+                    "account_nm": "재무활동으로 인한 현금흐름",
+                    "thstrm_amount": -8046394460,
+                    "currency": "KRW"
+                },
+                {
+                    "account_nm": "자기주식 취득",
+                    "thstrm_amount": 4289821780,
+                    "currency": "KRW"
+                },
+                {
+                    "account_nm": "리스부채의 상환",
+                    "thstrm_amount": 1821610580,
+                    "currency": "KRW"
+                },
+                {
+                    "account_nm": "주식매수선택권 행사",
+                    "thstrm_amount": 38572500,
+                    "currency": "KRW"
+                },
+                {
+                    "account_nm": "단기차입금의 차입",
+                    "thstrm_amount": 6700000000,
+                    "currency": "KRW"
+                },
+                {
+                    "account_nm": "단기차입금의 상환",
+                    "thstrm_amount": 3300000000,
+                    "currency": "KRW"
+                },
+                {
+                    "account_nm": "신주발행비",
+                    "thstrm_amount": -643000,
+                    "currency": "KRW"
+                },
+                {
+                    "account_nm": "현금배당",
+                    "thstrm_amount": 5372891600,
+                    "currency": "KRW"
+                },
+                {
+                    "account_nm": "투자활동으로 인한 현금흐름",
+                    "thstrm_amount": -3129469652,
+                    "currency": "KRW"
+                },
+                {
+                    "account_nm": "보증금의 감소",
+                    "thstrm_amount": 481750000,
+                    "currency": "KRW"
+                },
+                {
+                    "account_nm": "보증금의 증가",
+                    "thstrm_amount": 1290000000,
+                    "currency": "KRW"
+                },
+                {
+                    "account_nm": "기타자산의 처분",
+                    "thstrm_amount": 0,
+                    "currency": "KRW"
+                },
+                {
+                    "account_nm": "금융자산의 처분",
+                    "thstrm_amount": 1893626000,
+                    "currency": "KRW"
+                },
+                {
+                    "account_nm": "단기금융상품의 감소",
+                    "thstrm_amount": 10010909150,
+                    "currency": "KRW"
+                },
+                {
+                    "account_nm": "단기대여금의 감소",
+                    "thstrm_amount": 3542000000,
+                    "currency": "KRW"
+                },
+                {
+                    "account_nm": "관계기업투자의 증가",
+                    "thstrm_amount": 290000000,
+                    "currency": "KRW"
+                },
+                {
+                    "account_nm": "장기금융상품의 증가",
+                    "thstrm_amount": 3831984,
+                    "currency": "KRW"
+                },
+                {
+                    "account_nm": "장기대여금의 증가",
+                    "thstrm_amount": 0,
+                    "currency": "KRW"
+                },
+                {
+                    "account_nm": "금융자산의 취득",
+                    "thstrm_amount": 1803656799,
+                    "currency": "KRW"
+                },
+                {
+                    "account_nm": "단기금융상품의 증가",
+                    "thstrm_amount": 3710178220,
+                    "currency": "KRW"
+                },
+                {
+                    "account_nm": "단기대여금의 증가",
+                    "thstrm_amount": 3550000000,
+                    "currency": "KRW"
+                },
+                {
+                    "account_nm": "합병으로 인한 순현금흐름",
+                    "thstrm_amount": 1786370695,
+                    "currency": "KRW"
+                },
+                {
+                    "account_nm": "선급금의 증가",
+                    "thstrm_amount": 0,
+                    "currency": "KRW"
+                },
+                {
+                    "account_nm": "종속기업투자의 증가",
+                    "thstrm_amount": -333000000,
+                    "currency": "KRW"
+                },
+                {
+                    "account_nm": "공동기업투자의 증가",
+                    "thstrm_amount": 0,
+                    "currency": "KRW"
+                },
+                {
+                    "account_nm": "무형자산의 처분",
+                    "thstrm_amount": 217945455,
+                    "currency": "KRW"
+                },
+                {
+                    "account_nm": "유형자산의 처분",
+                    "thstrm_amount": 99305273,
+                    "currency": "KRW"
+                },
+                {
+                    "account_nm": "무형자산의 취득",
+                    "thstrm_amount": 7209486996,
+                    "currency": "KRW"
+                },
+                {
+                    "account_nm": "유형자산의 취득",
+                    "thstrm_amount": 2971222226,
+                    "currency": "KRW"
+                },
+                {
+                    "account_nm": "영업활동으로 인한 현금흐름",
+                    "thstrm_amount": 19664588863,
+                    "currency": "KRW"
+                },
+                {
+                    "account_nm": "자산 및 부채의 증감",
+                    "thstrm_amount": -5411155277,
+                    "currency": "KRW"
+                },
+                {
+                    "account_nm": "영업에서 창출된 현금",
+                    "thstrm_amount": 22819253416,
+                    "currency": "KRW"
+                },
+                {
+                    "account_nm": "조정",
+                    "thstrm_amount": 15315102571,
+                    "currency": "KRW"
+                },
+                {
+                    "account_nm": "배당금의 수취",
+                    "thstrm_amount": 3600000000,
+                    "currency": "KRW"
+                },
+                {
+                    "account_nm": "법인세의 납부",
+                    "thstrm_amount": 6660067650,
+                    "currency": "KRW"
+                },
+                {
+                    "account_nm": "이자의 지급",
+                    "thstrm_amount": 727734983,
+                    "currency": "KRW"
+                },
+                {
+                    "account_nm": "이자의 수취",
+                    "thstrm_amount": 633138080,
+                    "currency": "KRW"
+                },
+                {
+                    "account_nm": "당기순이익",
+                    "thstrm_amount": 12915306122,
+                    "currency": "KRW"
+                },
+                {
+                    "account_nm": "현금및현금성자산의 증가",
+                    "thstrm_amount": 8488724751,
+                    "currency": "KRW"
+                }
+            ],
+            "SCE": [
+                {
+                    "account_nm": "기초자본",
+                    "thstrm_amount": 146182364128,
+                    "currency": "KRW"
+                },
+                {
+                    "account_nm": "기초자본",
+                    "thstrm_amount": -6345970678,
+                    "currency": "KRW"
+                },
+                {
+                    "account_nm": "기초자본",
+                    "thstrm_amount": 36348443949,
+                    "currency": "KRW"
+                },
+                {
+                    "account_nm": "기초자본",
+                    "thstrm_amount": 14906619500,
+                    "currency": "KRW"
+                },
+                {
+                    "account_nm": "기초자본",
+                    "thstrm_amount": 101273271357,
+                    "currency": "KRW"
+                },
+                {
+                    "account_nm": "사업결합으로 인한 효과",
+                    "thstrm_amount": -1303187899,
+                    "currency": "KRW"
+                },
+                {
+                    "account_nm": "사업결합으로 인한 효과",
+                    "thstrm_amount": 0,
+                    "currency": "KRW"
+                },
+                {
+                    "account_nm": "사업결합으로 인한 효과",
+                    "thstrm_amount": 0,
+                    "currency": "KRW"
+                },
+                {
+                    "account_nm": "사업결합으로 인한 효과",
+                    "thstrm_amount": -1303187899,
+                    "currency": "KRW"
+                },
+                {
+                    "account_nm": "신주발행비용",
+                    "thstrm_amount": -643000,
+                    "currency": "KRW"
+                },
+                {
+                    "account_nm": "신주발행비용",
+                    "thstrm_amount": -643000,
+                    "currency": "KRW"
+                },
+                {
+                    "account_nm": "자기주식 취득",
+                    "thstrm_amount": -4289821780,
+                    "currency": "KRW"
+                },
+                {
+                    "account_nm": "자기주식 취득",
+                    "thstrm_amount": -4289821780,
+                    "currency": "KRW"
+                },
+                {
+                    "account_nm": "현물배당",
+                    "thstrm_amount": 0,
+                    "currency": "KRW"
+                },
+                {
+                    "account_nm": "현물배당",
+                    "thstrm_amount": 0,
+                    "currency": "KRW"
+                },
+                {
+                    "account_nm": "현물배당",
+                    "thstrm_amount": 0,
+                    "currency": "KRW"
+                },
+                {
+                    "account_nm": "현물배당",
+                    "thstrm_amount": 0,
+                    "currency": "KRW"
+                },
+                {
+                    "account_nm": "주식선택권 행사",
+                    "thstrm_amount": 38572500,
+                    "currency": "KRW"
+                },
+                {
+                    "account_nm": "주식선택권 행사",
+                    "thstrm_amount": -1246160,
+                    "currency": "KRW"
+                },
+                {
+                    "account_nm": "주식선택권 행사",
+                    "thstrm_amount": 4625000,
+                    "currency": "KRW"
+                },
+                {
+                    "account_nm": "주식선택권 행사",
+                    "thstrm_amount": 35193660,
+                    "currency": "KRW"
+                },
+                {
+                    "account_nm": "주식보상비용(이연법인세 포함)",
+                    "thstrm_amount": 7829100,
+                    "currency": "KRW"
+                },
+                {
+                    "account_nm": "주식보상비용(이연법인세 포함)",
+                    "thstrm_amount": 7829100,
+                    "currency": "KRW"
+                },
+                {
+                    "account_nm": "주식선택권 소멸",
+                    "thstrm_amount": -23487300,
+                    "currency": "KRW"
+                },
+                {
+                    "account_nm": "주식선택권 소멸",
+                    "thstrm_amount": -23487300,
+                    "currency": "KRW"
+                },
+                {
+                    "account_nm": "주식선택권 소멸",
+                    "thstrm_amount": 0,
+                    "currency": "KRW"
+                },
+                {
+                    "account_nm": "자기주식 소각",
+                    "thstrm_amount": 4493982993,
+                    "currency": "KRW"
+                },
+                {
+                    "account_nm": "자기주식 소각",
+                    "thstrm_amount": -4493982993,
+                    "currency": "KRW"
+                },
+                {
+                    "account_nm": "자본에 직접 인식된 주주와의 거래 등 합계",
+                    "thstrm_amount": -10943629979,
+                    "currency": "KRW"
+                },
+                {
+                    "account_nm": "자본에 직접 인식된 주주와의 거래 등 합계",
+                    "thstrm_amount": 187256853,
+                    "currency": "KRW"
+                },
+                {
+                    "account_nm": "자본에 직접 인식된 주주와의 거래 등 합계",
+                    "thstrm_amount": -9866874593,
+                    "currency": "KRW"
+                },
+                {
+                    "account_nm": "자본에 직접 인식된 주주와의 거래 등 합계",
+                    "thstrm_amount": 4625000,
+                    "currency": "KRW"
+                },
+                {
+                    "account_nm": "자본에 직접 인식된 주주와의 거래 등 합계",
+                    "thstrm_amount": -1268637239,
+                    "currency": "KRW"
+                },
+                {
+                    "account_nm": "당기총포괄이익",
+                    "thstrm_amount": 12819693603,
+                    "currency": "KRW"
+                },
+                {
+                    "account_nm": "당기총포괄이익",
+                    "thstrm_amount": 12819693603,
+                    "currency": "KRW"
+                },
+                {
+                    "account_nm": "현금배당",
+                    "thstrm_amount": 5372891600,
+                    "currency": "KRW"
+                },
+                {
+                    "account_nm": "현금배당",
+                    "thstrm_amount": 5372891600,
+                    "currency": "KRW"
+                },
+                {
+                    "account_nm": "자본총계",
+                    "thstrm_amount": 39301262959,
+                    "currency": "KRW"
+                },
+                {
+                    "account_nm": "자본총계",
+                    "thstrm_amount": -6158713825,
+                    "currency": "KRW"
+                },
+                {
+                    "account_nm": "자본총계",
+                    "thstrm_amount": 148058427752,
+                    "currency": "KRW"
+                },
+                {
+                    "account_nm": "자본총계",
+                    "thstrm_amount": 14911244500,
+                    "currency": "KRW"
+                },
+                {
+                    "account_nm": "자본총계",
+                    "thstrm_amount": 100004634118,
+                    "currency": "KRW"
+                },
+                {
+                    "account_nm": "확정급여제도의 재측정요소",
+                    "thstrm_amount": -95612519,
+                    "currency": "KRW"
+                },
+                {
+                    "account_nm": "확정급여제도의 재측정요소",
+                    "thstrm_amount": -95612519,
+                    "currency": "KRW"
+                },
+                {
+                    "account_nm": "당기순이익",
+                    "thstrm_amount": 12915306122,
+                    "currency": "KRW"
+                },
+                {
+                    "account_nm": "당기순이익",
+                    "thstrm_amount": 12915306122,
+                    "currency": "KRW"
+                }
+            ]
         }
     },
     "디지틀조선": {
@@ -7619,7 +8404,907 @@
     },
     "버킷스튜디오": {
         "corp_info": {
-            "market": "KOSDAQ"
+            "market": "KOSDAQ",
+            "stock_code": "066410"
+        },
+        "treasury_info": {
+            "직접취득": {
+                "보통주": 0,
+                "우선주": 0
+            },
+            "신탁계약에 의한취득": {
+                "보통주": 0,
+                "우선주": 0
+            },
+            "기타취득": {
+                "보통주": 0,
+                "우선주": 0
+            },
+            "총계": {
+                "보통주": 0,
+                "우선주": 0
+            }
+        },
+        "shareholder_list": [
+            {
+                "nm": "-",
+                "relate": "-",
+                "trmend_posesn_stock_co": 0,
+                "trmend_posesn_stock_qota_rt": 0.0
+            },
+            {
+                "nm": "계",
+                "relate": "N/A",
+                "trmend_posesn_stock_co": 0,
+                "trmend_posesn_stock_qota_rt": 0.0
+            }
+        ],
+        "issued_share": {
+            "합계": {
+                "istc_totqy": 0,
+                "now_to_totqy": 0,
+                "distb_stock_co": 0
+            },
+            "비고": {
+                "istc_totqy": 0,
+                "now_to_totqy": 0,
+                "distb_stock_co": 0
+            }
+        },
+        "contribution_info": [
+            {
+                "inv_prm": "㈜인바이오젠",
+                "frst_acqs_de": "2019.10.31",
+                "invstmnt_purps": "경영참여",
+                "trmend_blce_qy": "7,923,659",
+                "trmend_blce_qota_rt": "78.89"
+            },
+            {
+                "inv_prm": "㈜초록뱀미디어",
+                "frst_acqs_de": "2021.11.17",
+                "invstmnt_purps": "일반투자",
+                "trmend_blce_qy": "178,316",
+                "trmend_blce_qota_rt": "0.8"
+            },
+            {
+                "inv_prm": "㈜빗썸라이브",
+                "frst_acqs_de": "2021.09.10",
+                "invstmnt_purps": "일반투자",
+                "trmend_blce_qy": "240,000",
+                "trmend_blce_qota_rt": "37.5"
+            },
+            {
+                "inv_prm": "㈜메타커머스",
+                "frst_acqs_de": "2022.01.12",
+                "invstmnt_purps": "일반투자",
+                "trmend_blce_qy": "700,000",
+                "trmend_blce_qota_rt": "35"
+            },
+            {
+                "inv_prm": "아카라코리아㈜",
+                "frst_acqs_de": "2022.06.20",
+                "invstmnt_purps": "일반투자",
+                "trmend_blce_qy": "2,917,969",
+                "trmend_blce_qota_rt": "22.84"
+            },
+            {
+                "inv_prm": "합계",
+                "frst_acqs_de": "-",
+                "invstmnt_purps": "-",
+                "trmend_blce_qy": "-",
+                "trmend_blce_qota_rt": "-"
+            }
+        ],
+        "financial_info": {
+            "BS": [
+                {
+                    "account_nm": "자산총계",
+                    "thstrm_amount": 220038078439,
+                    "currency": "KRW"
+                },
+                {
+                    "account_nm": "유동자산",
+                    "thstrm_amount": 7144892265,
+                    "currency": "KRW"
+                },
+                {
+                    "account_nm": "현금및현금성자산",
+                    "thstrm_amount": 2720172917,
+                    "currency": "KRW"
+                },
+                {
+                    "account_nm": "당기법인세자산",
+                    "thstrm_amount": 5819730,
+                    "currency": "KRW"
+                },
+                {
+                    "account_nm": "재고자산",
+                    "thstrm_amount": 14575482,
+                    "currency": "KRW"
+                },
+                {
+                    "account_nm": "기타유동자산",
+                    "thstrm_amount": 236767027,
+                    "currency": "KRW"
+                },
+                {
+                    "account_nm": "기타금융자산",
+                    "thstrm_amount": 167932852,
+                    "currency": "KRW"
+                },
+                {
+                    "account_nm": "매출채권및기타채권",
+                    "thstrm_amount": 3999624257,
+                    "currency": "KRW"
+                },
+                {
+                    "account_nm": "비유동자산",
+                    "thstrm_amount": 212893186174,
+                    "currency": "KRW"
+                },
+                {
+                    "account_nm": "무형자산",
+                    "thstrm_amount": 1638411779,
+                    "currency": "KRW"
+                },
+                {
+                    "account_nm": "관계기업투자",
+                    "thstrm_amount": 19952703602,
+                    "currency": "KRW"
+                },
+                {
+                    "account_nm": "공동기업투자",
+                    "thstrm_amount": 0,
+                    "currency": "KRW"
+                },
+                {
+                    "account_nm": "종속기업투자",
+                    "thstrm_amount": 103681197171,
+                    "currency": "KRW"
+                },
+                {
+                    "account_nm": "매출채권및기타채권",
+                    "thstrm_amount": 0,
+                    "currency": "KRW"
+                },
+                {
+                    "account_nm": "투자부동산",
+                    "thstrm_amount": 75918525763,
+                    "currency": "KRW"
+                },
+                {
+                    "account_nm": "기타비유동금융자산",
+                    "thstrm_amount": 8063706346,
+                    "currency": "KRW"
+                },
+                {
+                    "account_nm": "유형자산",
+                    "thstrm_amount": 3638641513,
+                    "currency": "KRW"
+                },
+                {
+                    "account_nm": "자본잉여금",
+                    "thstrm_amount": 115941066244,
+                    "currency": "KRW"
+                },
+                {
+                    "account_nm": "자본조정",
+                    "thstrm_amount": -470200982,
+                    "currency": "KRW"
+                },
+                {
+                    "account_nm": "기타포괄손익누계액",
+                    "thstrm_amount": 60833916,
+                    "currency": "KRW"
+                },
+                {
+                    "account_nm": "자본총계",
+                    "thstrm_amount": 92907831976,
+                    "currency": "KRW"
+                },
+                {
+                    "account_nm": "자본금",
+                    "thstrm_amount": 42054963000,
+                    "currency": "KRW"
+                },
+                {
+                    "account_nm": "결손금",
+                    "thstrm_amount": -64678830202,
+                    "currency": "KRW"
+                },
+                {
+                    "account_nm": "부채 및 자본총계",
+                    "thstrm_amount": 220038078439,
+                    "currency": "KRW"
+                },
+                {
+                    "account_nm": "유동부채",
+                    "thstrm_amount": 125288965392,
+                    "currency": "KRW"
+                },
+                {
+                    "account_nm": "유동사채",
+                    "thstrm_amount": 26000000000,
+                    "currency": "KRW"
+                },
+                {
+                    "account_nm": "전환사채",
+                    "thstrm_amount": 0,
+                    "currency": "KRW"
+                },
+                {
+                    "account_nm": "전환우선주",
+                    "thstrm_amount": 50012285516,
+                    "currency": "KRW"
+                },
+                {
+                    "account_nm": "유동성장기차입금",
+                    "thstrm_amount": 44280000000,
+                    "currency": "KRW"
+                },
+                {
+                    "account_nm": "충당부채",
+                    "thstrm_amount": 40426594,
+                    "currency": "KRW"
+                },
+                {
+                    "account_nm": "기타금융부채",
+                    "thstrm_amount": 233691758,
+                    "currency": "KRW"
+                },
+                {
+                    "account_nm": "기타유동부채",
+                    "thstrm_amount": 2674324946,
+                    "currency": "KRW"
+                },
+                {
+                    "account_nm": "매입채무및기타채무",
+                    "thstrm_amount": 2048236578,
+                    "currency": "KRW"
+                },
+                {
+                    "account_nm": "부채총계",
+                    "thstrm_amount": 127130246463,
+                    "currency": "KRW"
+                },
+                {
+                    "account_nm": "비유동부채",
+                    "thstrm_amount": 1841281071,
+                    "currency": "KRW"
+                },
+                {
+                    "account_nm": "장기차입금",
+                    "thstrm_amount": 0,
+                    "currency": "KRW"
+                },
+                {
+                    "account_nm": "이연법인세부채",
+                    "thstrm_amount": 0,
+                    "currency": "KRW"
+                },
+                {
+                    "account_nm": "기타비유동금융부채",
+                    "thstrm_amount": 1841281071,
+                    "currency": "KRW"
+                }
+            ],
+            "IS": [],
+            "CIS": [
+                {
+                    "account_nm": "영업이익(손실)",
+                    "thstrm_amount": -1574670137,
+                    "currency": "KRW"
+                },
+                {
+                    "account_nm": "기타수익",
+                    "thstrm_amount": 457162540,
+                    "currency": "KRW"
+                },
+                {
+                    "account_nm": "기타비용",
+                    "thstrm_amount": 4776473743,
+                    "currency": "KRW"
+                },
+                {
+                    "account_nm": "판매비와관리비",
+                    "thstrm_amount": 6549341699,
+                    "currency": "KRW"
+                },
+                {
+                    "account_nm": "지분법손익",
+                    "thstrm_amount": -597293806,
+                    "currency": "KRW"
+                },
+                {
+                    "account_nm": "총포괄손익",
+                    "thstrm_amount": -8072150472,
+                    "currency": "KRW"
+                },
+                {
+                    "account_nm": "매출원가",
+                    "thstrm_amount": 7674889358,
+                    "currency": "KRW"
+                },
+                {
+                    "account_nm": "계속영업 희석주당손익",
+                    "thstrm_amount": -14,
+                    "currency": "KRW"
+                },
+                {
+                    "account_nm": "중단영업 희석주당손익",
+                    "thstrm_amount": -36,
+                    "currency": "KRW"
+                },
+                {
+                    "account_nm": "계속영업 기본주당손익",
+                    "thstrm_amount": 0,
+                    "currency": "KRW"
+                },
+                {
+                    "account_nm": "중단영업 기본주당손익",
+                    "thstrm_amount": -43,
+                    "currency": "KRW"
+                },
+                {
+                    "account_nm": "금융비용",
+                    "thstrm_amount": 43084478840,
+                    "currency": "KRW"
+                },
+                {
+                    "account_nm": "금융수익",
+                    "thstrm_amount": 49862347788,
+                    "currency": "KRW"
+                },
+                {
+                    "account_nm": "매출총이익",
+                    "thstrm_amount": 4974671562,
+                    "currency": "KRW"
+                },
+                {
+                    "account_nm": "법인세비용(수익)",
+                    "thstrm_amount": 276275482,
+                    "currency": "KRW"
+                },
+                {
+                    "account_nm": "기타포괄손익",
+                    "thstrm_amount": -3122277284,
+                    "currency": "KRW"
+                },
+                {
+                    "account_nm": "지분법자본변동",
+                    "thstrm_amount": 0,
+                    "currency": "KRW"
+                },
+                {
+                    "account_nm": "현금흐름위험회피 파생금융상품 평가손익",
+                    "thstrm_amount": -1135946852,
+                    "currency": "KRW"
+                },
+                {
+                    "account_nm": "기타포괄손익-공정가치 측정 금융자산 평가 손익",
+                    "thstrm_amount": -1986330432,
+                    "currency": "KRW"
+                },
+                {
+                    "account_nm": "당기순이익(손실)",
+                    "thstrm_amount": -4949873188,
+                    "currency": "KRW"
+                },
+                {
+                    "account_nm": "지배기업소유주지분",
+                    "thstrm_amount": -4949873188,
+                    "currency": "KRW"
+                },
+                {
+                    "account_nm": "법인세비용차감전순이익(손실)",
+                    "thstrm_amount": 286593802,
+                    "currency": "KRW"
+                },
+                {
+                    "account_nm": "계속영업이익(손실)",
+                    "thstrm_amount": 10318320,
+                    "currency": "KRW"
+                },
+                {
+                    "account_nm": "중단영업이익(손실)",
+                    "thstrm_amount": -4960191508,
+                    "currency": "KRW"
+                },
+                {
+                    "account_nm": "매출액",
+                    "thstrm_amount": 12649560920,
+                    "currency": "KRW"
+                }
+            ],
+            "CF": [
+                {
+                    "account_nm": "기초현금및현금성자산",
+                    "thstrm_amount": 12397296589,
+                    "currency": "KRW"
+                },
+                {
+                    "account_nm": "기말현금및현금성자산",
+                    "thstrm_amount": 2720172917,
+                    "currency": "KRW"
+                },
+                {
+                    "account_nm": "재무활동현금흐름",
+                    "thstrm_amount": -9972025658,
+                    "currency": "KRW"
+                },
+                {
+                    "account_nm": "임대보증금의 감소",
+                    "thstrm_amount": 396000000,
+                    "currency": "KRW"
+                },
+                {
+                    "account_nm": "임대보증금의 증가",
+                    "thstrm_amount": 250000000,
+                    "currency": "KRW"
+                },
+                {
+                    "account_nm": "리스부채의 상환",
+                    "thstrm_amount": 547669494,
+                    "currency": "KRW"
+                },
+                {
+                    "account_nm": "전환사채의 발행",
+                    "thstrm_amount": 0,
+                    "currency": "KRW"
+                },
+                {
+                    "account_nm": "장기차입금의 차입",
+                    "thstrm_amount": 0,
+                    "currency": "KRW"
+                },
+                {
+                    "account_nm": "단기차입금의 차입",
+                    "thstrm_amount": 0,
+                    "currency": "KRW"
+                },
+                {
+                    "account_nm": "장기차입금의 상환",
+                    "thstrm_amount": 3120000000,
+                    "currency": "KRW"
+                },
+                {
+                    "account_nm": "단기차입금의 상환",
+                    "thstrm_amount": 0,
+                    "currency": "KRW"
+                },
+                {
+                    "account_nm": "사채의 상환",
+                    "thstrm_amount": -2158356164,
+                    "currency": "KRW"
+                },
+                {
+                    "account_nm": "주식매입선택권의 행사",
+                    "thstrm_amount": 0,
+                    "currency": "KRW"
+                },
+                {
+                    "account_nm": "전환우선주의 발행",
+                    "thstrm_amount": 0,
+                    "currency": "KRW"
+                },
+                {
+                    "account_nm": "전환사채의 전환",
+                    "thstrm_amount": 0,
+                    "currency": "KRW"
+                },
+                {
+                    "account_nm": "전환사채의 상환",
+                    "thstrm_amount": -4000000000,
+                    "currency": "KRW"
+                },
+                {
+                    "account_nm": "주식의 발행",
+                    "thstrm_amount": 0,
+                    "currency": "KRW"
+                },
+                {
+                    "account_nm": "투자활동현금흐름",
+                    "thstrm_amount": 6590030318,
+                    "currency": "KRW"
+                },
+                {
+                    "account_nm": "당기손익인식금융자산의 처분",
+                    "thstrm_amount": 0,
+                    "currency": "KRW"
+                },
+                {
+                    "account_nm": "기타금융자산의 처분",
+                    "thstrm_amount": 600044409,
+                    "currency": "KRW"
+                },
+                {
+                    "account_nm": "기타비유동자산의 감소",
+                    "thstrm_amount": 130700000,
+                    "currency": "KRW"
+                },
+                {
+                    "account_nm": "관계기업에 대한 투자자산의 취득",
+                    "thstrm_amount": 0,
+                    "currency": "KRW"
+                },
+                {
+                    "account_nm": "장기금융상품의 취득",
+                    "thstrm_amount": 66513428,
+                    "currency": "KRW"
+                },
+                {
+                    "account_nm": "기타금융자산의 취득",
+                    "thstrm_amount": 0,
+                    "currency": "KRW"
+                },
+                {
+                    "account_nm": "단기대여금의 감소",
+                    "thstrm_amount": 40000000,
+                    "currency": "KRW"
+                },
+                {
+                    "account_nm": "기타포괄손익-공정가치측정금융자산의 처분",
+                    "thstrm_amount": 3000050336,
+                    "currency": "KRW"
+                },
+                {
+                    "account_nm": "종속기업투자의 처분",
+                    "thstrm_amount": 3507970000,
+                    "currency": "KRW"
+                },
+                {
+                    "account_nm": "공동기업투자의 처분",
+                    "thstrm_amount": 94419714,
+                    "currency": "KRW"
+                },
+                {
+                    "account_nm": "종속기업투자주식의 취득",
+                    "thstrm_amount": 0,
+                    "currency": "KRW"
+                },
+                {
+                    "account_nm": "관계기업투자주식의 취득",
+                    "thstrm_amount": 0,
+                    "currency": "KRW"
+                },
+                {
+                    "account_nm": "공동기업투자주식의 취득",
+                    "thstrm_amount": 0,
+                    "currency": "KRW"
+                },
+                {
+                    "account_nm": "기타비유동자산의 취득",
+                    "thstrm_amount": 0,
+                    "currency": "KRW"
+                },
+                {
+                    "account_nm": "단기대여금의 증가",
+                    "thstrm_amount": 0,
+                    "currency": "KRW"
+                },
+                {
+                    "account_nm": "유형자산의 처분",
+                    "thstrm_amount": 145459287,
+                    "currency": "KRW"
+                },
+                {
+                    "account_nm": "무형자산의 취득",
+                    "thstrm_amount": 846000000,
+                    "currency": "KRW"
+                },
+                {
+                    "account_nm": "투자부동산의 취득",
+                    "thstrm_amount": 0,
+                    "currency": "KRW"
+                },
+                {
+                    "account_nm": "유형자산의 취득",
+                    "thstrm_amount": 16100000,
+                    "currency": "KRW"
+                },
+                {
+                    "account_nm": "영업활동현금흐름",
+                    "thstrm_amount": -6295128332,
+                    "currency": "KRW"
+                },
+                {
+                    "account_nm": "영업활동으로 인한 자산 부채의 변동",
+                    "thstrm_amount": -1648274822,
+                    "currency": "KRW"
+                },
+                {
+                    "account_nm": "당기순이익조정을 위한 가감",
+                    "thstrm_amount": 4307619283,
+                    "currency": "KRW"
+                },
+                {
+                    "account_nm": "법인세환급(납부)",
+                    "thstrm_amount": -19904260,
+                    "currency": "KRW"
+                },
+                {
+                    "account_nm": "이자지급(영업)",
+                    "thstrm_amount": 4069968164,
+                    "currency": "KRW"
+                },
+                {
+                    "account_nm": "이자수취",
+                    "thstrm_amount": 45464299,
+                    "currency": "KRW"
+                },
+                {
+                    "account_nm": "당기순이익(손실)",
+                    "thstrm_amount": -4949873188,
+                    "currency": "KRW"
+                },
+                {
+                    "account_nm": "현금및현금성자산의순증가(감소)",
+                    "thstrm_amount": -9677123672,
+                    "currency": "KRW"
+                }
+            ],
+            "SCE": [
+                {
+                    "account_nm": "기타포괄손익-공정가치 측정 금융자산 평가손익",
+                    "thstrm_amount": -1986330432,
+                    "currency": "KRW"
+                },
+                {
+                    "account_nm": "기타포괄손익-공정가치 측정 금융자산 평가손익",
+                    "thstrm_amount": -1986330432,
+                    "currency": "KRW"
+                },
+                {
+                    "account_nm": "기타포괄손익-공정가치 측정 금융자산 평가손익",
+                    "thstrm_amount": -1986330432,
+                    "currency": "KRW"
+                },
+                {
+                    "account_nm": "기초자본",
+                    "thstrm_amount": 0,
+                    "currency": "KRW"
+                },
+                {
+                    "account_nm": "기초자본",
+                    "thstrm_amount": -51605295739,
+                    "currency": "KRW"
+                },
+                {
+                    "account_nm": "기초자본",
+                    "thstrm_amount": 42054963000,
+                    "currency": "KRW"
+                },
+                {
+                    "account_nm": "기초자본",
+                    "thstrm_amount": 115941066244,
+                    "currency": "KRW"
+                },
+                {
+                    "account_nm": "기초자본",
+                    "thstrm_amount": 106910584535,
+                    "currency": "KRW"
+                },
+                {
+                    "account_nm": "기초자본",
+                    "thstrm_amount": 5460401105,
+                    "currency": "KRW"
+                },
+                {
+                    "account_nm": "기초자본",
+                    "thstrm_amount": 106910584535,
+                    "currency": "KRW"
+                },
+                {
+                    "account_nm": "기초자본",
+                    "thstrm_amount": -4940550075,
+                    "currency": "KRW"
+                },
+                {
+                    "account_nm": "기타포괄손익-공정가치측정금융자산 제거로 인한 평가손익누적액의 변동",
+                    "thstrm_amount": 8123661275,
+                    "currency": "KRW"
+                },
+                {
+                    "account_nm": "기타포괄손익-공정가치측정금융자산 제거로 인한 평가손익누적액의 변동",
+                    "thstrm_amount": -8123661275,
+                    "currency": "KRW"
+                },
+                {
+                    "account_nm": "주식매입선택권의 인식",
+                    "thstrm_amount": 0,
+                    "currency": "KRW"
+                },
+                {
+                    "account_nm": "주식매입선택권의 인식",
+                    "thstrm_amount": 0,
+                    "currency": "KRW"
+                },
+                {
+                    "account_nm": "주식매입선택권의 인식",
+                    "thstrm_amount": 0,
+                    "currency": "KRW"
+                },
+                {
+                    "account_nm": "결손보전",
+                    "thstrm_amount": 0,
+                    "currency": "KRW"
+                },
+                {
+                    "account_nm": "결손보전",
+                    "thstrm_amount": 0,
+                    "currency": "KRW"
+                },
+                {
+                    "account_nm": "지분법자본변동",
+                    "thstrm_amount": 0,
+                    "currency": "KRW"
+                },
+                {
+                    "account_nm": "지분법자본변동",
+                    "thstrm_amount": 0,
+                    "currency": "KRW"
+                },
+                {
+                    "account_nm": "지분법자본변동",
+                    "thstrm_amount": 0,
+                    "currency": "KRW"
+                },
+                {
+                    "account_nm": "주식매입선택권소멸",
+                    "thstrm_amount": 0,
+                    "currency": "KRW"
+                },
+                {
+                    "account_nm": "주식매입선택권소멸",
+                    "thstrm_amount": 0,
+                    "currency": "KRW"
+                },
+                {
+                    "account_nm": "주식매입선택권의 행사",
+                    "thstrm_amount": 0,
+                    "currency": "KRW"
+                },
+                {
+                    "account_nm": "주식매입선택권의 행사",
+                    "thstrm_amount": 0,
+                    "currency": "KRW"
+                },
+                {
+                    "account_nm": "주식매입선택권의 행사",
+                    "thstrm_amount": 0,
+                    "currency": "KRW"
+                },
+                {
+                    "account_nm": "주식매입선택권의 행사",
+                    "thstrm_amount": 0,
+                    "currency": "KRW"
+                },
+                {
+                    "account_nm": "주식매입선택권의 행사",
+                    "thstrm_amount": 0,
+                    "currency": "KRW"
+                },
+                {
+                    "account_nm": "위험회피목적 파생상품평가",
+                    "thstrm_amount": -1135946852,
+                    "currency": "KRW"
+                },
+                {
+                    "account_nm": "위험회피목적 파생상품평가",
+                    "thstrm_amount": -1135946852,
+                    "currency": "KRW"
+                },
+                {
+                    "account_nm": "위험회피목적 파생상품평가",
+                    "thstrm_amount": -1135946852,
+                    "currency": "KRW"
+                },
+                {
+                    "account_nm": "유상증자",
+                    "thstrm_amount": 0,
+                    "currency": "KRW"
+                },
+                {
+                    "account_nm": "유상증자",
+                    "thstrm_amount": 0,
+                    "currency": "KRW"
+                },
+                {
+                    "account_nm": "유상증자",
+                    "thstrm_amount": 0,
+                    "currency": "KRW"
+                },
+                {
+                    "account_nm": "유상증자",
+                    "thstrm_amount": 0,
+                    "currency": "KRW"
+                },
+                {
+                    "account_nm": "전환사채의 발행",
+                    "thstrm_amount": 0,
+                    "currency": "KRW"
+                },
+                {
+                    "account_nm": "전환사채의 발행",
+                    "thstrm_amount": 0,
+                    "currency": "KRW"
+                },
+                {
+                    "account_nm": "전환사채의 발행",
+                    "thstrm_amount": 0,
+                    "currency": "KRW"
+                },
+                {
+                    "account_nm": "전환사채의 상환",
+                    "thstrm_amount": -5930602087,
+                    "currency": "KRW"
+                },
+                {
+                    "account_nm": "전환사채의 상환",
+                    "thstrm_amount": -5930602087,
+                    "currency": "KRW"
+                },
+                {
+                    "account_nm": "전환사채의 상환",
+                    "thstrm_amount": -5930602087,
+                    "currency": "KRW"
+                },
+                {
+                    "account_nm": "자본총계",
+                    "thstrm_amount": 92907831976,
+                    "currency": "KRW"
+                },
+                {
+                    "account_nm": "자본총계",
+                    "thstrm_amount": -470200982,
+                    "currency": "KRW"
+                },
+                {
+                    "account_nm": "자본총계",
+                    "thstrm_amount": 60833916,
+                    "currency": "KRW"
+                },
+                {
+                    "account_nm": "자본총계",
+                    "thstrm_amount": -64678830202,
+                    "currency": "KRW"
+                },
+                {
+                    "account_nm": "자본총계",
+                    "thstrm_amount": 42054963000,
+                    "currency": "KRW"
+                },
+                {
+                    "account_nm": "자본총계",
+                    "thstrm_amount": 115941066244,
+                    "currency": "KRW"
+                },
+                {
+                    "account_nm": "자본총계",
+                    "thstrm_amount": 92907831976,
+                    "currency": "KRW"
+                },
+                {
+                    "account_nm": "기타포괄손익",
+                    "thstrm_amount": -3122277284,
+                    "currency": "KRW"
+                },
+                {
+                    "account_nm": "당기순이익(손실)",
+                    "thstrm_amount": 4949873188,
+                    "currency": "KRW"
+                },
+                {
+                    "account_nm": "당기순이익(손실)",
+                    "thstrm_amount": -4949873188,
+                    "currency": "KRW"
+                },
+                {
+                    "account_nm": "당기순이익(손실)",
+                    "thstrm_amount": 4949873188,
+                    "currency": "KRW"
+                }
+            ]
         }
     },
     "범한퓨얼셀": {
