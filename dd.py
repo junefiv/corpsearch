@@ -1,47 +1,30 @@
-import requests
-import xml.etree.ElementTree as ET
-import json
+from langchain.document_loaders import TextLoader
+from langchain.text_splitter import RecursiveCharacterTextSplitter
+from langchain.embeddings import OpenAIEmbeddings
+from langchain.vectorstores import FAISS
+from langchain.chains import RetrievalQA
+from langchain.llms import OpenAI
 
-def get_income_statement(crno, bizYear, serviceKey, resultType="xml"):
-    url = "http://apis.data.go.kr/1160100/service/GetFinaStatInfoService_V2/getIncoStat_V2"
-    params = {
-        "pageNo": 1,
-        "numOfRows": 100,  # 충분한 데이터 조회를 위해 설정
-        "resultType": resultType,
-        "serviceKey": serviceKey,
-        "crno": crno,
-        "bizYear": bizYear,
-    }
-    
-    response = requests.get(url, params=params)
-    if response.status_code != 200:
-        print("API 호출 오류", response.status_code)
-        return None
-    
-    return response.text
+# 1. 아티클 로드
+loader = TextLoader("article.txt", encoding="utf-8")
+documents = loader.load()
 
-def parse_xml_to_json(xml_data):
-    root = ET.fromstring(xml_data)
-    items = root.findall(".//item")
-    
-    result = []
-    for item in items:
-        acitNm = item.find("acitNm").text if item.find("acitNm") is not None else ""
-        crtmAcitAmt = item.find("crtmAcitAmt").text if item.find("crtmAcitAmt") is not None else "0"
-        
-        result.append({
-            "acitNm": acitNm,
-            "crtmAcitAmt": crtmAcitAmt
-        })
-    
-    return json.dumps(result, indent=4, ensure_ascii=False)
+# 2. 텍스트 분할
+text_splitter = RecursiveCharacterTextSplitter(chunk_size=1000, chunk_overlap=200)
+docs = text_splitter.split_documents(documents)
 
-# 예제 실행
-crno = "1101110414758"  # 법인등록번호
-bizYear = "2023"  # 사업연도
-serviceKey = "Wbh3mv0f0/yry0YxyrnXoj7vWtV1j1NLE2GIz4PDiw1nMyScrFgLy+VBFbBawkIFMeKI/eiXLLQNphjfIe5uEg=="  # 본인의 서비스키 입력
+# 3. 임베딩 및 벡터 스토어 생성
+embeddings = OpenAIEmbeddings()
+vector_store = FAISS.from_documents(docs, embeddings)
 
-xml_response = get_income_statement(crno, bizYear, serviceKey)
-if xml_response:
-    json_result = parse_xml_to_json(xml_response)
-    print(json_result)
+# 4. 질의응답 체인 구성
+qa_chain = RetrievalQA.from_chain_type(
+    llm=OpenAI(), 
+    chain_type="stuff", 
+    retriever=vector_store.as_retriever()
+)
+
+# 5. 사용자 질의에 따른 응답 생성
+query = "이 아티클의 주요 내용을 설명해줘."
+result = qa_chain.run(query)
+print(result)
