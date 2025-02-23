@@ -8,7 +8,7 @@ import json
 from pykrx import stock
 from datetime import datetime, timedelta
 import os
-from PyQt5.QtCore import Qt, QTimer
+from PyQt5.QtCore import Qt, QTimer, QThread, pyqtSignal
 import math
 import requests
 import zipfile
@@ -67,264 +67,29 @@ def get_ticker_price(corp_name, stock_code):
     
     return 0
 
-class SearchWindow(QWidget):
-    def __init__(self):
+class SearchThread(QThread):
+    search_completed = pyqtSignal(str, dict, int)  # 검색 완료 시 신호
+
+    def __init__(self, corp_name, corps):
         super().__init__()
-        self.search_queue = []  # 검색 대기열
-        self.search_timer = QTimer()  # 검색 타이머
-        self.search_timer.timeout.connect(self.process_search_queue)
-        self.search_timer.setInterval(2000)  # 2초 간격
-        self.init_ui()
-        
-    def init_ui(self):
-        # 메인 레이아웃 설정
-        main_layout = QVBoxLayout()
-        
-        # 스택 위젯 생성
-        self.stack = QStackedWidget()
-        
-        # 첫 번째 페이지 (검색 페이지)
-        search_page = QWidget()
-        search_layout = QVBoxLayout()
-        
-        # 검색 레이아웃 생성
-        input_layout = QHBoxLayout()
-        
-        # 검색 라벨과 입력창 생성
-        search_label = QLabel('기업명:')
-        self.search_input = QLineEdit()
-        self.search_input.returnPressed.connect(self.search_company)
-        search_button = QPushButton('검색하기')
-        search_button.clicked.connect(self.search_company)
-        
-        # 검색 레이아웃에 위젯 추가
-        input_layout.addWidget(search_label)
-        input_layout.addWidget(self.search_input)
-        input_layout.addWidget(search_button)
-        
-        # 검색 페이지 레이아웃에 위젯 추가
-        search_layout.addLayout(input_layout)
-        search_page.setLayout(search_layout)
-        
-        # 두 번째 페이지 (결과 페이지)
-        self.result_page = QWidget()
-        result_layout = QVBoxLayout()
-        
-        # 결과 페이지 내용
-        self.result_label = QLabel()
-        self.result_label.setAlignment(Qt.AlignCenter)
-        
-        # 테이블 열 헤더 정의
-        TABLE_HEADERS = [
-            '기업명','상장시장','주가','직접취득주 총액','기타취득주 총액','직접+기타',
-            '신탁계약취득주 총액','자사주 총액','취득가능지분율','매출액','영업이익(%)',
-            '수익성','안전성','활동성','성장성','EPS','PER','BPS','PBR'
-        ]
+        self.corp_name = corp_name
+        self.corps = corps
 
-        # 첫 번째 테이블 (1행 18열)
-        self.header_table = QTableWidget(1, len(TABLE_HEADERS))
-        self.header_table.setHorizontalHeaderLabels(TABLE_HEADERS)
-        self.header_table.verticalHeader().setVisible(False)
+    def run(self):
+        # 검색 작업 수행
+        corp_info = self.corps[self.corp_name]
+        corp_code = corp_info['corp_code']
+        stock_code = corp_info['stock_code']
         
-        # 두 번째 테이블 (무한행 18열)
-        self.data_table = QTableWidget()
-        self.data_table.setColumnCount(len(TABLE_HEADERS))
-        self.data_table.setHorizontalHeaderLabels(TABLE_HEADERS)
-        self.data_table.verticalHeader().setVisible(False)
+        # 주가 가져오기
+        current_price = get_ticker_price(self.corp_name, stock_code)
         
-        # 테이블 높이를 헤더와 한 행의 높이에 맞게 고정
-        header_height = self.header_table.horizontalHeader().height()
-        row_height = self.header_table.rowHeight(0)
-        scrollbar_height = self.header_table.horizontalScrollBar().height()  # 스크롤바 높이
-        total_height = header_height + row_height + scrollbar_height  # 스크롤바 높이 추가
-        self.header_table.setFixedHeight(total_height)
+        # 자기주식 정보 가져오기
+        self.get_treasury_stock(corp_code, self.corp_name, self.corps)
+        
+        # 검색 완료 신호 발송
+        self.search_completed.emit(self.corp_name, self.corps, current_price)
 
-        # 헤더 테이블 가운데 정렬
-        for col in range(len(TABLE_HEADERS)):
-            item = self.header_table.item(0, col)
-            if item is None:
-                item = QTableWidgetItem()
-                self.header_table.setItem(0, col, item)
-            item.setTextAlignment(Qt.AlignCenter)
-
-        # 데이터 테이블 가운데 정렬 설정
-        def center_align_item(table, row, col):
-            item = table.item(row, col)
-            if item is None:
-                item = QTableWidgetItem()
-                table.setItem(row, col, item)
-            item.setTextAlignment(Qt.AlignCenter)
-
-        # 데이터 테이블에 아이템이 추가될 때마다 가운데 정렬 적용
-        self.data_table.itemChanged.connect(
-            lambda item: item.setTextAlignment(Qt.AlignCenter)
-        )
-        
-        # 스크롤바 설정
-        self.header_table.setVerticalScrollBarPolicy(Qt.ScrollBarAlwaysOff)      # 세로 스크롤바 숨김
-        self.header_table.setHorizontalScrollBarPolicy(Qt.ScrollBarAlwaysOn)     # 가로 스크롤바 표시
-        
-        # 뒤로가기 버튼
-        back_button = QPushButton('뒤로가기')
-        back_button.clicked.connect(self.go_back)
-        
-        # 결과 페이지 레이아웃에 위젯 추가
-        result_layout.addWidget(self.result_label)
-        result_layout.addWidget(self.header_table)
-        result_layout.addWidget(self.data_table)
-        result_layout.addWidget(back_button)
-        self.result_page.setLayout(result_layout)
-        
-        # 스택에 페이지 추가
-        self.stack.addWidget(search_page)
-        self.stack.addWidget(self.result_page)
-        
-        # 메인 레이아웃에 스택 추가
-        main_layout.addWidget(self.stack)
-        
-        # 특정 열의 너비 조정
-        # 상장시장 열 (영문 7글자 기준)
-        self.header_table.setColumnWidth(1, self.header_table.fontMetrics().width("AAAAAAA") + 20)
-        # 신탁계약취득주 총액 열 (한글 11글자 기준)
-        self.header_table.setColumnWidth(6, self.header_table.fontMetrics().width("가나다라마바사아자차카") + 20)
-        # 수익성, 안전성, 활동성, 성장성 열 (한글 5글자 기준)
-        for col in [11, 12, 13, 14]:  # 수익성, 안전성, 활동성, 성장성 열 인덱스
-            self.header_table.setColumnWidth(col, self.header_table.fontMetrics().width("가나다라마") + 20)
-        
-        # 데이터 테이블에도 동일한 열 너비 적용
-        for col in [1, 6, 11, 12, 13, 14]:
-            self.data_table.setColumnWidth(col, self.header_table.columnWidth(col))
-        
-        # 윈도우 설정
-        self.setLayout(main_layout)
-        self.setWindowTitle('기업 정보')
-        self.setGeometry(300, 300, 800, 600)
-        
-    def search_company(self):
-        query = self.search_input.text().strip()
-        if not query:
-            QMessageBox.information(self, '알림', '검색어를 입력해주세요.')
-            return
-        
-        try:
-            # corp_info.json이 없을 때만 save_corp_codes 호출
-            if not os.path.exists('cache/corp_info.json'):
-                self.save_corp_codes()
-            
-            with open('cache/corp_info.json', 'r', encoding='utf-8') as f:
-                corps = json.load(f)
-            
-            found_companies = []
-            for corp_name in corps.keys():
-                if query in corp_name:
-                    found_companies.append(corp_name)
-            
-            if not found_companies:
-                QMessageBox.information(self, '검색 결과', '검색한 기업이 존재하지 않습니다.')
-                return
-            
-            if len(found_companies) > 1:
-                # 회사 선택 다이얼로그 생성
-                dialog = QDialog(self)
-                dialog.setWindowTitle('회사 선택')
-                dialog.setModal(True)
-                dialog.setMinimumWidth(800)  # 다이얼로그 최소 너비 설정
-                
-                main_layout = QVBoxLayout()
-                label = QLabel('검색된 회사 중 하나를 선택해주세요:')
-                main_layout.addWidget(label)
-                
-                # 그리드 레이아웃 생성
-                grid_layout = QGridLayout()
-                grid_layout.setSpacing(10)  # 버튼 간 간격 설정
-                
-                # 회사 목록을 라디오 버튼으로 표시 (5열 그리드)
-                button_group = QButtonGroup()
-                selected_company = None
-                
-                for i, company in enumerate(found_companies):
-                    radio = QRadioButton(company)
-                    if i == 0:  # 첫 번째 항목 자동 선택
-                        radio.setChecked(True)
-                        selected_company = company
-                    button_group.addButton(radio, i)
-                    
-                    # 5열 그리드에 배치
-                    row = i // 5
-                    col = i % 5
-                    grid_layout.addWidget(radio, row, col)
-                
-                # 그리드 레이아웃을 스크롤 영역에 추가
-                scroll_area = QScrollArea()
-                scroll_widget = QWidget()
-                scroll_widget.setLayout(grid_layout)
-                scroll_area.setWidget(scroll_widget)
-                scroll_area.setWidgetResizable(True)
-                scroll_area.setMaximumHeight(400)  # 스크롤 영역 최대 높이 설정
-                main_layout.addWidget(scroll_area)
-                
-                # 확인/취소 버튼
-                buttons = QHBoxLayout()
-                ok_button = QPushButton('확인')
-                cancel_button = QPushButton('취소')
-                buttons.addWidget(ok_button)
-                buttons.addWidget(cancel_button)
-                main_layout.addLayout(buttons)
-                
-                dialog.setLayout(main_layout)
-                
-                # 버튼 클릭 이벤트 처리
-                def on_button_clicked(button):
-                    nonlocal selected_company
-                    if button == ok_button:
-                        selected_radio = button_group.checkedButton()
-                        if selected_radio:
-                            selected_company = selected_radio.text()
-                        dialog.accept()
-                    else:
-                        dialog.reject()
-                
-                ok_button.clicked.connect(lambda: on_button_clicked(ok_button))
-                cancel_button.clicked.connect(lambda: on_button_clicked(cancel_button))
-                
-                # 다이얼로그 실행
-                if dialog.exec_() == QDialog.Accepted and selected_company:
-                    # 선택된 회사의 정보만 처리
-                    corp_info = corps[selected_company]
-                    corp_code = corp_info['corp_code']
-                    self.get_treasury_stock(corp_code, selected_company, corps)
-                    
-                    # 헤더 테이블 업데이트
-                    self.update_header_table(selected_company, corps, get_ticker_price(selected_company, corp_info['stock_code']))
-                    
-                    self.stack.setCurrentIndex(1)
-                    self.showMaximized()
-                    
-                    # 업데이트된 정보 저장
-                    with open('cache/corp_info.json', 'w', encoding='utf-8') as f:
-                        json.dump(corps, f, ensure_ascii=False, indent=4)
-            else:
-                # 단일 검색 결과 처리
-                corp_name = found_companies[0]
-                corp_info = corps[corp_name]
-                corp_code = corp_info['corp_code']
-                self.get_treasury_stock(corp_code, corp_name, corps)
-                
-                # 헤더 테이블 업데이트
-                self.update_header_table(corp_name, corps, get_ticker_price(corp_name, corp_info['stock_code']))
-                
-                self.stack.setCurrentIndex(1)
-                self.showMaximized()
-                
-                # 업데이트된 정보 저장
-                with open('cache/corp_info.json', 'w', encoding='utf-8') as f:
-                    json.dump(corps, f, ensure_ascii=False, indent=4)
-            
-        except FileNotFoundError:
-            QMessageBox.warning(self, '오류', '기업 정보 파일을 찾을 수 없습니다.')
-        except Exception as e:
-            QMessageBox.warning(self, '오류', f'오류가 발생했습니다: {str(e)}')
-        
     def get_treasury_stock(self, corp_code, corp_name, corps):
         API_KEY = "bea2a84f1ed21a05c3bc44c406f4b12f9ba56902"
         current_year = datetime.now().year
@@ -833,7 +598,14 @@ class SearchWindow(QWidget):
                 
                 # 현재 거래 가능한 기업만 포함
                 if stock_code and stock_code.strip() and corp_name in trading_companies:
-                    market = "KOSPI" if stock_code in trading_companies.values() else "KOSDAQ"
+                    # KOSPI와 KOSDAQ 시장을 직접 확인
+                    if stock_code in stock.get_market_ticker_list(market="KOSPI"):
+                        market = "KOSPI"
+                    elif stock_code in stock.get_market_ticker_list(market="KOSDAQ"):
+                        market = "KOSDAQ"
+                    else:
+                        market = "Unknown"  # 알 수 없는 경우
+
                     corps[corp_name] = {
                         "corp_code": corp_code,
                         "stock_code": stock_code,
@@ -849,78 +621,6 @@ class SearchWindow(QWidget):
         except Exception as e:
             QMessageBox.warning(self, '오류', f'오류가 발생했습니다: {str(e)}')
     
-    
-
-    def update_header_table_data(self, found_companies, corps):
-        # 주가 정보를 미리 가져와서 저장
-        price_cache = {}
-        for company in found_companies:
-            corp_info = corps[company]
-            stock_code = corp_info.get('stock_code', '')
-            price_cache[company] = get_ticker_price(company, stock_code)
-
-        # 첫 번째 기업의 정보를 header_table에만 표시
-        if found_companies:
-            first_company = found_companies[0]
-            self.update_header_table(first_company, corps, price_cache[first_company])
-            
-            # 결과 페이지로 이동 후에 자동 검색 시작
-            self.stack.setCurrentIndex(1)
-            self.showMaximized()
-            
-            try:
-                # corp_info.json 파일 읽기
-                with open('cache/corp_info.json', 'r', encoding='utf-8') as f:
-                    all_corps = json.load(f)
-                
-                # 이미 검색된 기업들 목록 유지
-                searched_companies = set(found_companies)
-                
-                # stock_code 기준으로 내림차순 정렬
-                sorted_corps = sorted(
-                    all_corps.items(), 
-                    key=lambda x: x[1].get('stock_code', ''), 
-                    reverse=True
-                )
-                
-                # 캐시된 데이터와 미캐시 데이터 분리
-                cached_companies = []
-                uncached_companies = []
-                
-                for corp_name, corp_data in sorted_corps:
-                    if corp_name not in searched_companies:
-                        has_all_cache = all([
-                            "treasury_stock" in corp_data,
-                            "finance_info" in corp_data,
-                            "stock_amount" in corp_data,
-                            "shareholders_info" in corp_data,
-                            "corp_status" in corp_data
-                        ])
-                        
-                        if has_all_cache:
-                            cached_companies.append(corp_name)
-                        else:
-                            uncached_companies.append(corp_name)
-                
-                print(f"캐시된 기업: {len(cached_companies)}개")
-                print(f"캐시되지 않은 기업: {len(uncached_companies)}개")
-                
-                # 데이터 테이블 초기화
-                self.data_table.setRowCount(0)
-                
-                
-
-                
-                # 검색 타이머 시작
-                if self.search_queue:
-                    print(f"검색 대기열에 {len(self.search_queue)}개 기업 추가됨")
-                    self.search_timer.start()
-            
-            except Exception as e:
-                print(f"자동 검색 중 오류 발생: {str(e)}")
-            
-            return
-
     def update_header_table(self, company_name, corps, current_price):
         corp_info = corps[company_name]
         
@@ -1384,9 +1084,3 @@ class SearchWindow(QWidget):
         except Exception as e:
             print(f"{company_name} 성장성 지표 계산 중 오류 발생: {str(e)}")
             return "계산불가", ""
-
-if __name__ == '__main__':
-    app = QApplication(sys.argv)
-    window = SearchWindow()
-    window.show()
-    sys.exit(app.exec_())
