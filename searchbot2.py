@@ -15,6 +15,7 @@ from queue import Queue
 import math
 import typing
 from PyQt5.QtGui import QColor
+import re
 
 DART_API_KEY = 'bea2a84f1ed21a05c3bc44c406f4b12f9ba56902'
 
@@ -36,22 +37,21 @@ class NumericTableWidgetItem(QTableWidgetItem):
     def __init__(self, text):
         super().__init__(text)
     def __lt__(self, other):
-        # 숫자 비교를 위해 텍스트에서 쉼표 및 단위(원, 주, 억원, %, 개 등)를 제거
         def parse(text):
             try:
-                # 숫자에 포함될 수 있는 문자만 남김 (소수점 포함)
-                cleaned = text.replace(',', '')
-                for unit in ['원', '주', '억원', '%', '개']:
-                    cleaned = cleaned.replace(unit, '')
-                return float(cleaned)
+                # 쉼표 제거
+                text = text.replace(',', '')
+                # 정규표현식을 사용하여 숫자(정수 또는 실수)를 추출
+                match = re.search(r"[-+]?[0-9]*\.?[0-9]+", text)
+                if match:
+                    return float(match.group())
+                else:
+                    return 0.0
             except ValueError:
-                return None
+                return 0.0
         self_val = parse(self.text())
         other_val = parse(other.text())
-        if self_val is not None and other_val is not None:
-            return self_val < other_val
-        # 숫자로 변환되지 않으면 기본 텍스트 비교 수행
-        return super().__lt__(other)
+        return self_val < other_val
 
 # 숫자 변환 헬퍼 함수 수정
 def convert_to_int(value):
@@ -378,6 +378,8 @@ class DataCollector:
                                 
                                 for item in stockTotqySttus_data['list']:
                                     se = item.get('se', 'N/A')
+                                    if se == '합계':  # API에 이미 존재하는 합계 행이면 건너뛰기
+                                        continue
                                     istc_totqy = item.get('istc_totqy', '0')
                                     tesstk_co = item.get('tesstk_co', '0')
                                     distb_stock_co = item.get('distb_stock_co', '0')
@@ -404,10 +406,9 @@ class DataCollector:
                                     # 합계 데이터 추가
                                     issued_share['합계'] = {
                                         'istc_totqy': total_istc_totqy,
-                                        'tesstk_co': sum(data.get('tesstk_co', 0) for data in issued_share.values()),
-                                        'distb_stock_co': sum(data.get('distb_stock_co', 0) for data in issued_share.values())
+                                        'tesstk_co': sum(data.get('tesstk_co', 0) for key, data in issued_share.items() if key != '합계'),
+                                        'distb_stock_co': sum(data.get('distb_stock_co', 0) for key, data in issued_share.items() if key != '합계')
                                     }
-                                    
                                     existing_corp_info[company_name]["issued_share"] = issued_share
                                     found_valid_data = True
                                     print(f"- {year}년 {reprt_code} 보고서에서 유효한 발행주식 정보를 찾았습니다.")
@@ -1082,7 +1083,7 @@ class CompanyInfoDialog(QDialog):
         self.setLayout(layout)
         
 class ShareholderDialog(QDialog):
-    def __init__(self, shareholder_list, company_name, parent=None):
+    def __init__(self, shareholder_list, company_name, issued_total, parent=None):
         super().__init__(parent)
         self.setWindowTitle(f"{company_name} 주주현황")
         self.setMinimumWidth(800)
@@ -1108,16 +1109,17 @@ class ShareholderDialog(QDialog):
             if not shareholder['nm'].endswith('계'):
                 processed_data.append(shareholder)
                 total_shares += shareholder['trmend_posesn_stock_co']
-                total_ratio += shareholder['trmend_posesn_stock_qota_rt']
+         
         
         # 데이터 채우기
         table.setRowCount(len(processed_data) + 1)  # +1 for total row
         for row, shareholder in enumerate(processed_data):
+            computed_ratio = (shareholder['trmend_posesn_stock_co'] / issued_total) * 100 if issued_total else 0.0
             for col, value in enumerate([
                 str(shareholder['nm']),
                 str(shareholder['relate']),
                 f"{shareholder['trmend_posesn_stock_co']:,}",
-                f"{shareholder['trmend_posesn_stock_qota_rt']:.2f}"
+                f"{computed_ratio:.2f}"
             ]):
                 item = QTableWidgetItem(value)
                 item.setTextAlignment(Qt.AlignCenter)
@@ -1125,6 +1127,7 @@ class ShareholderDialog(QDialog):
         
         # 합계 행 추가
         total_row = len(processed_data)
+        total_ratio = (total_shares / issued_total) * 100 if issued_total else 0.0
         for col, value in enumerate(['합계', '', f"{total_shares:,}", f"{total_ratio:.2f}"]):
             item = QTableWidgetItem(value)
             item.setTextAlignment(Qt.AlignCenter)
@@ -1194,16 +1197,27 @@ class ResultWidget(QWidget):
             print(f"시가총액 계산 중 오류 발생: {e}")
             return "N/A"
 
-    def calculate_shareholder_ratio(self, shareholder_list):
+    def calculate_shareholder_ratio(self, shareholder_list, company_name):
         try:
-            total_ratio = 0.0
-            if shareholder_list:
-                for shareholder in shareholder_list:
-                    if not shareholder['nm'].endswith('계'):  # '계'로 끝나는 항목 제외
-                        total_ratio += convert_to_float(shareholder['trmend_posesn_stock_qota_rt'])
-            return f"{total_ratio:.2f}%"
+            # 분자: 모든 주주의 trmend_posesn_stock_co의 합계
+            numerator = sum(convert_to_int(shareholder.get('trmend_posesn_stock_co', 0))
+                            for shareholder in shareholder_list)
+            
+            # 해당 회사의 데이터에서 발행주식 총수 가져오기
+            denominator = convert_to_int(self.existing_corp_info.get(company_name, {})
+                                    .get('issued_share', {})
+                                    .get('합계', {})
+                                    .get('istc_totqy', 0))
+            
+            print(f"[{company_name}] 주요주주 총수: {numerator}, 발행주식총수: {denominator}")
+            
+            if denominator == 0:
+                return "N/A"
+                
+            ratio = (numerator / denominator) * 100
+            return f"{ratio:.2f}%"
         except Exception as e:
-            print(f"주주 지분율 계산 중 오류 발생: {e}")
+            print(f"[{company_name}] 주주 지분율 계산 중 오류 발생: {e}")
             return "N/A"
 
     def calculate_total_treasury(self):
@@ -1245,7 +1259,7 @@ class ResultWidget(QWidget):
         self.data_table.setSortingEnabled(True)  # 헤더 클릭 시 오름차/내림차 정렬 활성화
         
         # 주주 지분율 계산
-        shareholder_ratio = self.calculate_shareholder_ratio(self.company_data.get('shareholder_list', []))
+        shareholder_ratio = self.calculate_shareholder_ratio(self.company_data.get('shareholder_list', []), self.search_term)
         
         # 출자현황 개수 계산
         contribution_count = len(self.company_data.get('contribution_info', []))
@@ -1349,6 +1363,7 @@ class ResultWidget(QWidget):
         self.existing_corp_info[company_name] = company_data
         
         print(f"\n테이블 업데이트: {company_name}")
+        self.data_table.setSortingEnabled(False)
         
         # 새로운 행 추가
         row = self.data_table.rowCount()
@@ -1396,7 +1411,7 @@ class ResultWidget(QWidget):
                 company_data.get('corp_info', {}).get('market', 'N/A'),
                 f"{total_treasury:,}주" if total_treasury > 0 else "0주",
                 closing_price,
-                self.calculate_shareholder_ratio(company_data.get('shareholder_list', [])),
+                self.calculate_shareholder_ratio(company_data.get('shareholder_list', []), company_name),
                 self.calculate_market_cap(closing_price, company_data),
                 f"{contribution_count}개"  # 출자현황 개수 추가
             ]
@@ -1431,6 +1446,7 @@ class ResultWidget(QWidget):
                     new_item.setToolTip("클릭하여 출자현황 보기")
                 
                 self.data_table.setItem(row, col, new_item)
+            self.data_table.setSortingEnabled(True)
             
             print(f"{company_name} 테이블 업데이트 완료")
             
@@ -1459,7 +1475,12 @@ class ResultWidget(QWidget):
                 dialog.exec_()
         elif column == 4:  # 최대주주 지분 열을 클릭했을 때
             if company_data and 'shareholder_list' in company_data:
-                dialog = ShareholderDialog(company_data['shareholder_list'], company_name, self)
+                # 발행주식 총수 계산
+                issued_total = 0
+                if 'issued_share' in company_data and '합계' in company_data['issued_share']:
+                    issued_total = convert_to_int(company_data['issued_share']['합계'].get('istc_totqy', 0))
+                
+                dialog = ShareholderDialog(company_data['shareholder_list'], company_name, issued_total, self)
                 dialog.exec_()
         elif column == 6:  # 출자현황 열을 클릭했을 때
             if company_data and 'contribution_info' in company_data:
