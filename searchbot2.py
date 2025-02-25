@@ -1,7 +1,7 @@
 import sys
 import os
 import json
-from PyQt5.QtWidgets import QApplication, QWidget, QLineEdit, QPushButton, QVBoxLayout, QMessageBox, QListWidget, QDialog, QStackedWidget, QLabel, QTableWidget, QTableWidgetItem, QAbstractItemView, QHeaderView
+from PyQt5.QtWidgets import QApplication, QWidget, QLineEdit, QPushButton, QVBoxLayout, QMessageBox, QListWidget, QDialog, QStackedWidget, QLabel, QTableWidget, QTableWidgetItem, QAbstractItemView, QHeaderView, QHBoxLayout
 from pykrx import stock
 import requests
 import zipfile
@@ -16,15 +16,53 @@ from queue import Queue
 import math
 import typing
 import re
+import traceback
+import tempfile
 
-DART_API_KEY = 'bea2a84f1ed21a05c3bc44c406f4b12f9ba56902'
+if not os.path.exists('logs'):
+    os.makedirs('logs')
+
+def get_cache_dir():
+    try:
+        if getattr(sys, 'frozen', False):
+            # exe 실행 시에는 실행 파일이 있는 디렉토리의 cache 폴더 사용
+            base_dir = os.path.dirname(sys.executable)
+        else:
+            # 일반 파이썬 실행 시에는 스크립트 파일이 있는 디렉토리의 cache 폴더 사용
+            base_dir = os.path.dirname(os.path.abspath(__file__))
+        
+        cache_dir = os.path.join(base_dir, 'cache')
+        
+        # 캐시 디렉토리가 없으면 생성
+        if not os.path.exists(cache_dir):
+            os.makedirs(cache_dir)
+            
+        return cache_dir
+        
+    except Exception as e:
+        # 권한 문제 등으로 생성 실패 시 사용자 임시 디렉토리 사용
+        temp_cache_dir = os.path.join(tempfile.gettempdir(), 'searchbot_cache')
+        if not os.path.exists(temp_cache_dir):
+            os.makedirs(temp_cache_dir)
+        return temp_cache_dir
+
+# 2. 캐시 디렉토리 생성
+cache_dir = get_cache_dir()
+if not os.path.exists(cache_dir):
+    os.makedirs(cache_dir)
+
+# 3. 캐시 파일 경로 설정
+cache_file = os.path.join(get_cache_dir(), 'corp_info.json')
+
+DART_API_KEY = '91226718b5a46f417a86d2cf0c0c16df49ecc36c'
+
 
 # STANDARD_TABLE 스타일 정의
 STANDARD_TABLE = """
     QTableWidget {
         background-color: white;
-        alternate-background-color: #f5f5f5;
-        selection-background-color: #0078d7;
+        alternate-background-color: #f5f5f5ㄷ;
+        selection-background-color: #0078d7;ㄴㄴㄴㄴ
         selection-color: white;
         border: 1px solid #d3d3d3;
         gridline-color: #d3d3d3;
@@ -647,9 +685,9 @@ class DataCollectorThread(QThread):
         
         # 캐시된 기업과 미캐시된 기업 분리
         cached_companies = [name for name in self.existing_corp_info.keys() 
-                          if name != self.search_term and 
-                          all(field in self.existing_corp_info[name] and self.existing_corp_info[name][field] 
-                              for field in self.required_fields)]
+                           if name != 'timestamp' and  # timestamp 키 제외
+                           all(field in self.existing_corp_info[name] and self.existing_corp_info[name][field] 
+                               for field in self.required_fields)]
         
         uncached_companies = [name for name in self.existing_corp_info.keys()
                             if name != self.search_term and
@@ -716,14 +754,46 @@ class DataCollectorThread(QThread):
         self.processed += 1
         self.progress.emit(self.processed, self.total_companies)
         
-        current_dir = os.path.dirname(os.path.abspath(__file__))
-        cache_file = os.path.join(current_dir, 'cache', 'corp_info.json')
+       
+        cache_file = os.path.join(get_cache_dir(), 'corp_info.json')
         
         print(f"저장할 데이터: {self.existing_corp_info[company_name]}")
         
         try:
-            with open(cache_file, 'w', encoding='utf-8') as f:
-                json.dump(self.existing_corp_info, f, ensure_ascii=False, indent=4)
+            # 현재 timestamp 가져오기
+            current_timestamp = int(time.time())
+            
+            # 기존 캐시 파일이 있는 경우
+            if os.path.exists(cache_file):
+                with open(cache_file, 'r', encoding='utf-8') as f:
+                    cached_data = json.load(f)
+                    
+                # timestamp 확인
+                if 'timestamp' in cached_data:
+                    # 일주일(7일 = 604800초)이 지났는지 확인
+                    if current_timestamp - cached_data['timestamp'] > 604800:
+                        # 캐시 파일 삭제
+                        os.remove(cache_file)
+                        # 새로운 데이터와 timestamp 저장
+                        self.existing_corp_info['timestamp'] = current_timestamp
+                        with open(cache_file, 'w', encoding='utf-8') as f:
+                            json.dump(self.existing_corp_info, f, ensure_ascii=False, indent=4)
+                    else:
+                        # 일주일이 지나지 않았으면 기존 데이터 유지하고 company_name에 해당하는 데이터만 업데이트
+                        cached_data[company_name] = self.existing_corp_info[company_name]
+                        with open(cache_file, 'w', encoding='utf-8') as f:
+                            json.dump(cached_data, f, ensure_ascii=False, indent=4)
+                else:
+                    # timestamp가 없는 경우 새로 추가
+                    self.existing_corp_info['timestamp'] = current_timestamp
+                    with open(cache_file, 'w', encoding='utf-8') as f:
+                        json.dump(self.existing_corp_info, f, ensure_ascii=False, indent=4)
+            else:
+                # 캐시 파일이 없는 경우 새로 생성
+                self.existing_corp_info['timestamp'] = current_timestamp
+                with open(cache_file, 'w', encoding='utf-8') as f:
+                    json.dump(self.existing_corp_info, f, ensure_ascii=False, indent=4)
+                
             print(f"데이터 저장 완료: {cache_file}")
         except Exception as e:
             print(f"데이터 저장 중 오류 발생: {str(e)}")
@@ -740,6 +810,9 @@ class SearchApp(QWidget):
         font = QApplication.font()
         font.setFamily("Malgun Gothic")  # 한글 폰트 설정
         QApplication.setFont(font)
+        
+        # 초기 윈도우 크기 설정 (카카오톡 PC 버전 크기와 유사하게)
+   
         
         # company_codes 초기화
         self.company_codes = {}
@@ -771,9 +844,15 @@ class SearchApp(QWidget):
         self.initUI()
         self.stack = QStackedWidget()
         self.stack.addWidget(self)
-        
+
+        window_width = 400
+        window_height = 600
+        screen = QApplication.primaryScreen().geometry()
+        x = (screen.width() - window_width) // 2
+        y = (screen.height() - window_height) // 2
         # 윈도우 최대화 설정
-        self.stack.showMaximized()
+        self.stack.setGeometry(x, y, window_width, window_height)
+        self.stack.show()
         
         self.progress_label = QLabel('', self)
         layout = self.layout()
@@ -791,31 +870,119 @@ class SearchApp(QWidget):
         ]
 
     def initUI(self):
-        # 레이아웃 설정
+        # 메인 레이아웃
         layout = QVBoxLayout()
-
-        # 검색창 생성
-        self.search_box = QLineEdit(self)
+        
+        # 중앙 정렬을 위한 여백 추가
+        layout.addStretch()
+        
+        # 검색 위젯들을 담을 컨테이너
+        search_container = QWidget()
+        search_layout = QVBoxLayout(search_container)
+        
+        # 제목 라벨 생성 및 스타일 설정
+        title_label = QLabel("자사주 스왑딜 대상기업 검색기")
+        title_label.setAlignment(Qt.AlignCenter)
+        font = title_label.font()
+        font.setPointSize(14)  # 폰트 크기 설정
+        font.setBold(True)     # 볼드체 설정
+        title_label.setFont(font)
+        search_layout.addWidget(title_label, alignment=Qt.AlignCenter)
+        
+        # 제목과 검색창 사이 간격 추가
+        search_layout.addSpacing(50)  # 간격을 50으로 증가
+        
+        # 배경색 설정
+        self.setStyleSheet
+        
+        # 검색창 생성 및 스타일 설정
+        self.search_box = QLineEdit()
         self.search_box.setPlaceholderText('검색어를 입력하세요...')
-        layout.addWidget(self.search_box)
+        self.search_box.setFixedWidth(300)
+        self.search_box.setFixedHeight(40)
+        self.search_box.setStyleSheet("""
+            QLineEdit {
+                border: 2px solid #A0A0A0;
+                border-radius: 20px;
+                padding: 0 15px;
+                background-color: white;
+                font-size: 14px;
+            }
+            QLineEdit:focus {
+                border: 2px solid #4A90E2;
+                background-color: #FFFFFF;
+            }
+            QLineEdit::placeholder {
+                color: #999999;
+            }
+        """)
+        search_layout.addWidget(self.search_box, alignment=Qt.AlignCenter)
 
-        # 검색 버튼 생성
-        search_button = QPushButton('검색', self)
-        layout.addWidget(search_button)
+        # 검색 버튼 생성 및 스타일 설정
+        search_button = QPushButton('검색')
+        search_button.setFixedWidth(100)
+        search_button.setFixedHeight(30)
+        search_button.setStyleSheet("""
+            QPushButton {
+                background-color: #4A90E2;
+                color: white;
+                border: none;
+                border-radius: 15px;
+                font-size: 14px;
+                font-weight: bold;
+            }
+            QPushButton:hover {
+                background-color: #357ABD;
+            }
+            QPushButton:pressed {
+                background-color: #2E6DA4;
+            }
+        """)
+        search_layout.addWidget(search_button, alignment=Qt.AlignCenter)
 
         # 검색 버튼 클릭 시 검색 함수 연결
         search_button.clicked.connect(self.perform_search)
-
+        
         # 엔터 키 입력 시 검색 함수 연결
         self.search_box.returnPressed.connect(self.perform_search)
 
-        # 레이아웃 설정
+        # 컨테이너를 메인 레이아웃에 추가
+        layout.addWidget(search_container, alignment=Qt.AlignCenter)
+        
+        # 하단 여백 추가
+        layout.addStretch()
+
         self.setLayout(layout)
-        self.setWindowTitle('검색 앱')
-        self.show()
 
     def perform_search(self):
         search_term = self.search_box.text().strip()
+        
+        # 검색 실행 시 윈도우 최대화
+        self.stack.showMaximized()
+        
+        # 캐시 파일 체크 및 로드
+        cache_file = os.path.join(get_cache_dir(), 'corp_info.json')  # 수정된 부분
+        
+        if os.path.exists(cache_file):
+            try:
+                with open(cache_file, 'r', encoding='utf-8') as f:
+                    cached_data = json.load(f)
+                    
+                # timestamp 확인
+                if 'timestamp' in cached_data:
+                    current_timestamp = int(time.time())
+                    timestamp = cached_data.pop('timestamp')  # timestamp 제거 후 저장
+                    # 일주일이 지났는지 확인
+                    if current_timestamp - timestamp > 604800:
+                        # 캐시 파일 삭제
+                        os.remove(cache_file)
+                        self.existing_corp_info = {}
+                    else:
+                        # 캐시된 데이터 사용 (timestamp 제외)
+                        self.existing_corp_info = cached_data
+            except Exception as e:
+                print(f"캐시 파일 로드 중 오류 발생: {str(e)}")
+                self.existing_corp_info = {}
         
         # 한글 인코딩 처리
         try:
@@ -845,20 +1012,18 @@ class SearchApp(QWidget):
         current_year = datetime.now().year
 
         # 현재 스크립트 경로 가져오기
-        current_dir = os.path.dirname(os.path.abspath(__file__))
-        cache_dir = os.path.join(current_dir, 'cache')
+        cache_dir = get_cache_dir()  # get_cache_dir() 함수 사용
         cache_file = os.path.join(cache_dir, 'corp_info.json')
         
-        # 캐시 디렉토리 생성
-        os.makedirs(cache_dir, exist_ok=True)
+
 
         # 기존 캐시 파일 읽기
         try:
             if os.path.exists(cache_file):
                 with open(cache_file, 'r', encoding='utf-8') as f:
                     self.existing_corp_info = json.load(f)
-        except json.JSONDecodeError as e:
-            print(f"캐시 파일이 손상되었습니다: {e}")
+        except Exception as e:
+            print(f"캐시 파일 로드 중 오류 발생: {str(e)}")
             self.existing_corp_info = {}
 
         # KOSPI, KOSDAQ 기업 정보 추가 (기존 데이터 유지)
@@ -1475,7 +1640,7 @@ class ResultWidget(QWidget):
         standard_table.horizontalHeader().setSectionResizeMode(QHeaderView.Fixed)
         
         # 헤더에 '출자현황' 추가
-        headers = ['기업명', '자기주식 총계', '최대주주 지분', '시가총액', '출자현황', '자본총계', '이익잉여금', '매출', '영업이익', '당기순이익', '영업활동 현금흐름', '현금성자산', '성장성', '안정성', '수익성', '효율성']
+        headers = ['기업명', '자사주총액', '최대주주 지분', '시가총액', '출자현황', '자본총계', '이익잉여금', '매출', '영업이익', '당기순이익', '영업활동 현금흐름', '현금성자산', '성장성', '안정성', '수익성', '효율성']
         standard_table.setHorizontalHeaderLabels(headers)
         
         font_metrics = QFontMetrics(standard_table.font())
@@ -1495,7 +1660,31 @@ class ResultWidget(QWidget):
         standard_table.setFixedHeight(standard_table.verticalHeader().length() + 60)
         layout.addWidget(standard_table)
         
-        # data_table 초기화
+        # 필터링 UI 추가
+        filter_layout = QHBoxLayout()
+        filter_layout.setSpacing(10)  # 수평 방향 간격 설정
+        
+        # 필터 라벨
+        filter_label = QLabel("자사주총액 필터 (±%):")
+        filter_layout.addWidget(filter_label)
+        
+        # 필터 입력 박스
+        self.filter_input = QLineEdit()
+        self.filter_input.setPlaceholderText("퍼센티지 입력")
+        self.filter_input.setFixedWidth(100)
+        self.filter_input.textChanged.connect(self.apply_filter)
+        filter_layout.addWidget(self.filter_input)
+        
+        # 필터 초기화 버튼
+        reset_button = QPushButton("필터 초기화")
+        reset_button.clicked.connect(self.reset_filter)
+        filter_layout.addWidget(reset_button)
+        
+        filter_layout.addStretch()
+        layout.addLayout(filter_layout)
+        layout.setSpacing(5)  # 수직 방향 간격 설정
+
+        # data_table 설정
         self.data_table = QTableWidget()
         self.data_table.setColumnCount(16)
         self.data_table.verticalHeader().setVisible(False)  # 세로 헤더(순번) 숨기기
@@ -1790,6 +1979,9 @@ class ResultWidget(QWidget):
         self.progress_label = QLabel('데이터 수집 중...')
         layout.addWidget(self.progress_label)
 
+        # 필터링된 데이터를 저장할 딕셔너리 추가
+        self.filtered_companies = {}
+
         # data_table 추가
         layout.addWidget(self.data_table)
 
@@ -1832,6 +2024,26 @@ class ResultWidget(QWidget):
 
     @pyqtSlot(str, dict)
     def update_data_table(self, company_name, company_data):
+        # search_term과 동일한 기업은 data_table에 추가하지 않음
+        if company_name == self.search_term:
+            return
+        
+        # 필터가 적용된 상태에서 새로운 데이터 추가 시 필터 조건 확인
+        if self.filter_input.text():
+            try:
+                percentage = float(self.filter_input.text())
+                standard_amount = self.parse_amount(self.calculate_total_treasury_amount())
+                new_amount = self.parse_amount(self.calculate_total_treasury_amount(company_data))
+                
+                min_amount = standard_amount * (100 - percentage) / 100
+                max_amount = standard_amount * (100 + percentage) / 100
+                
+                if not (min_amount <= new_amount <= max_amount):
+                    self.filtered_companies[company_name] = False
+                    return
+            except ValueError:
+                pass
+        
         # existing_corp_info 업데이트
         self.existing_corp_info[company_name] = company_data
         
@@ -2187,8 +2399,10 @@ class ResultWidget(QWidget):
             
             print(f"{company_name} 테이블 업데이트 완료")
             
-           
-
+            # 필터가 적용된 상태라면 필터 조건에 따라 행 숨김 처리
+            if self.filter_input.text() and not self.filtered_companies.get(company_name, True):
+                self.data_table.setRowHidden(row, True)
+            
             # ... rest of the code ...
         except Exception as e:
             print(f"테이블 업데이트 중 오류 발생 ({company_name}): {str(e)}")
@@ -2507,6 +2721,57 @@ class ResultWidget(QWidget):
             elif value >= 2.0: return 3
             elif value >= 1.0: return 2
             else: return 1
+
+    def apply_filter(self):
+        filter_text = self.filter_input.text().strip()
+        
+        # 필터가 비어있으면 모든 행 표시
+        if not filter_text:
+            for row in range(self.data_table.rowCount()):
+                self.data_table.setRowHidden(row, False)
+                if self.data_table.item(row, 0):
+                    company_name = self.data_table.item(row, 0).text()
+                    self.filtered_companies[company_name] = True
+            return
+        
+        try:
+            percentage = float(filter_text)
+            standard_amount = self.parse_amount(self.calculate_total_treasury_amount())
+            
+            for row in range(self.data_table.rowCount()):
+                if self.data_table.item(row, 1):  # 자사주총액 열 확인
+                    company_name = self.data_table.item(row, 0).text()
+                    amount_str = self.data_table.item(row, 1).text()
+                    amount = self.parse_amount(amount_str)
+                    
+                    min_amount = standard_amount * (100 - percentage) / 100
+                    max_amount = standard_amount * (100 + percentage) / 100
+                    
+                    show_row = min_amount <= amount <= max_amount
+                    self.data_table.setRowHidden(row, not show_row)
+                    self.filtered_companies[company_name] = show_row
+                    
+        except ValueError:
+            # 숫자가 아닌 입력의 경우 모든 행 표시
+            for row in range(self.data_table.rowCount()):
+                self.data_table.setRowHidden(row, False)
+                if self.data_table.item(row, 0):
+                    company_name = self.data_table.item(row, 0).text()
+                    self.filtered_companies[company_name] = True
+
+    def reset_filter(self):
+        self.filter_input.clear()
+        self.filtered_companies.clear()
+        # 모든 행 표시
+        for row in range(self.data_table.rowCount()):
+            self.data_table.setRowHidden(row, False)
+
+    def parse_amount(self, amount_str):
+        try:
+            # "억원" 제거하고 숫자만 추출
+            return float(amount_str.replace('억원', '').replace(',', ''))
+        except:
+            return 0
 
 class FinancialMetricsDialog(QDialog):
     def __init__(self, metrics_type, metrics_data, company_name, parent=None):
@@ -3000,14 +3265,67 @@ class FinancialMetricsDialog(QDialog):
 
 
 if __name__ == '__main__':
-    app = QApplication(sys.argv)
-    # 전역 한글 설정
-    font = QFont("Malgun Gothic", 9)  # 기본 폰트 크기 9
-    app.setFont(font)
-    
-    # 한글 인코딩 설정
-    QTextCodec.setCodecForLocale(QTextCodec.codecForName('UTF-8'))
-    
-    search_app = SearchApp()
-    search_app.stack.showMaximized()  # 윈도우 최대화
-    sys.exit(app.exec_())
+    try:
+        # 로그 디렉토리 경로 설정
+        if getattr(sys, 'frozen', False):
+            # exe 실행 시
+            base_dir = os.path.dirname(sys.executable)
+        else:
+            # 일반 파이썬 실행 시
+            base_dir = os.path.dirname(os.path.abspath(__file__))
+            
+        log_dir = os.path.join(base_dir, 'logs')
+        
+        # 로그 디렉토리 생성 시도
+        try:
+            os.makedirs(log_dir, exist_ok=True)
+        except Exception as e:
+            # 권한 문제 등으로 실패 시 임시 디렉토리 사용
+            log_dir = os.path.join(tempfile.gettempdir(), 'searchbot_logs')
+            os.makedirs(log_dir, exist_ok=True)
+        
+        log_file = os.path.join(log_dir, 'error_log.txt')
+        
+        # 전역 예외 처리기 설정
+        def handle_exception(exc_type, exc_value, exc_traceback):
+            try:
+                error_msg = ''.join(traceback.format_exception(exc_type, exc_value, exc_traceback))
+                
+                # 로그 파일에 오류 기록
+                with open(log_file, 'a', encoding='utf-8') as f:
+                    f.write(f"\n[{datetime.now().strftime('%Y-%m-%d %H:%M:%S')}]\n")
+                    f.write(error_msg)
+                
+                # 사용자에게 오류 메시지 표시
+                QMessageBox.critical(None, '오류', 
+                    f'프로그램 실행 중 오류가 발생했습니다:\n\n{str(exc_value)}\n\n'
+                    f'자세한 오류 내용이 다음 위치에 저장되었습니다:\n{log_file}')
+            except Exception as e:
+                # 최후의 수단으로 기본 메시지 박스만 표시
+                QMessageBox.critical(None, '심각한 오류',
+                    f'프로그램 실행 중 치명적인 오류가 발생했습니다:\n{str(exc_value)}')
+        
+        sys.excepthook = handle_exception
+        
+        # QApplication 초기화 및 실행
+        app = QApplication(sys.argv)
+        font = QFont("Malgun Gothic", 9)
+        app.setFont(font)
+        QTextCodec.setCodecForLocale(QTextCodec.codecForName('UTF-8'))
+        
+        try:
+            search_app = SearchApp()
+            search_app.stack.show()
+            sys.exit(app.exec_())
+        except Exception as e:
+            QMessageBox.critical(None, '초기화 오류', 
+                f'프로그램 초기화 중 오류가 발생했습니다:\n{str(e)}')
+            sys.exit(1)
+            
+    except Exception as e:
+        # GUI가 초기화되기 전 발생하는 오류 처리
+        import ctypes
+        ctypes.windll.user32.MessageBoxW(0, 
+            f"프로그램 시작 중 심각한 오류가 발생했습니다:\n{str(e)}", 
+            "치명적 오류", 0x10)
+        sys.exit(1)
