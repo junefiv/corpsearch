@@ -1715,11 +1715,17 @@ class ResultWidget(QWidget):
             'inventory': self.calculate_efficiency_score(self.inventory_turnover, "inventory")
         }
 
-        # 각 지표의 평균 점수 계산
-        growth_avg = sum(self.growth_scores.values()) / len(self.growth_scores) if self.growth_scores else 0
-        stability_avg = sum(self.stability_scores.values()) / len(self.stability_scores) if self.stability_scores else 0
-        profitability_avg = sum(self.profitability_scores.values()) / len(self.profitability_scores) if self.profitability_scores else 0
-        efficiency_avg = sum(self.efficiency_scores.values()) / len(self.efficiency_scores) if self.efficiency_scores else 0
+      
+        growth_scores_valid = [score for score in self.growth_scores.values() if score > 0]  # 0은 N/A를 의미
+        stability_scores_valid = [score for score in self.stability_scores.values() if score > 0]
+        profitability_scores_valid = [score for score in self.profitability_scores.values() if score > 0]
+        efficiency_scores_valid = [score for score in self.efficiency_scores.values() if score > 0]
+
+        # 유효한 점수가 있는 경우에만 평균 계산, 없으면 "N/A" 반환
+        growth_avg = f"{sum(growth_scores_valid) / len(growth_scores_valid):.1f}" if growth_scores_valid else "N/A"
+        stability_avg = f"{sum(stability_scores_valid) / len(stability_scores_valid):.1f}" if stability_scores_valid else "N/A"
+        profitability_avg = f"{sum(profitability_scores_valid) / len(profitability_scores_valid):.1f}" if profitability_scores_valid else "N/A"
+        efficiency_avg = f"{sum(efficiency_scores_valid) / len(efficiency_scores_valid):.1f}" if efficiency_scores_valid else "N/A"
         
         # 데이터 입력
         data = [
@@ -1735,10 +1741,10 @@ class ResultWidget(QWidget):
             f"{net_profit_amount / 100000000:,.2f}억원", #당기순이익
             f"{operating_cash_flow_amount / 100000000:,.2f}억원", #영업활동 현금흐름
             f"{cash_and_cash_equivalents_amount / 100000000:,.2f}억원", #현금성자산
-            f"{growth_avg:.1f}점", #성장성 평균
-            f"{stability_avg:.1f}점", #안정성 평균
-            f"{profitability_avg:.1f}점", #수익성 평균
-            f"{efficiency_avg:.1f}점" #효율성 평균
+            f"{growth_avg}점" if growth_avg != "N/A" else "N/A",
+            f"{stability_avg}점" if stability_avg != "N/A" else "N/A",
+            f"{profitability_avg}점" if profitability_avg != "N/A" else "N/A",
+            f"{efficiency_avg}점" if efficiency_avg != "N/A" else "N/A"
         ]
         
         for col, value in enumerate(data):
@@ -2102,10 +2108,18 @@ class ResultWidget(QWidget):
             }
 
             # 각 지표의 평균 점수 계산
-            growth_avg = sum(self.growth_scores.values()) / len(self.growth_scores) if self.growth_scores else 0
-            stability_avg = sum(self.stability_scores.values()) / len(self.stability_scores) if self.stability_scores else 0
-            profitability_avg = sum(self.profitability_scores.values()) / len(self.profitability_scores) if self.profitability_scores else 0
-            efficiency_avg = sum(self.efficiency_scores.values()) / len(self.efficiency_scores) if self.efficiency_scores else 0
+         
+            
+            growth_scores_valid = [score for score in self.growth_scores.values() if score > 0]  # 0은 N/A를 의미
+            stability_scores_valid = [score for score in self.stability_scores.values() if score > 0]
+            profitability_scores_valid = [score for score in self.profitability_scores.values() if score > 0]
+            efficiency_scores_valid = [score for score in self.efficiency_scores.values() if score > 0]
+
+            # 유효한 점수가 있는 경우에만 평균 계산, 없으면 "N/A" 반환
+            growth_avg = f"{sum(growth_scores_valid) / len(growth_scores_valid):.1f}" if growth_scores_valid else "N/A"
+            stability_avg = f"{sum(stability_scores_valid) / len(stability_scores_valid):.1f}" if stability_scores_valid else "N/A"
+            profitability_avg = f"{sum(profitability_scores_valid) / len(profitability_scores_valid):.1f}" if profitability_scores_valid else "N/A"
+            efficiency_avg = f"{sum(efficiency_scores_valid) / len(efficiency_scores_valid):.1f}" if efficiency_scores_valid else "N/A"
 
             # 데이터 리스트 생성
             data_list = [
@@ -2121,10 +2135,10 @@ class ResultWidget(QWidget):
                 f"{net_profit_amount / 100000000:,.2f}억원", #당기순이익
                 f"{operating_cash_flow_amount / 100000000:,.2f}억원", #영업활동 현금흐름
                 f"{cash_and_cash_equivalents_amount / 100000000:,.2f}억원", #현금성자산,
-                f"{growth_avg:.1f}점", #성장성 평균
-                f"{stability_avg:.1f}점", #안정성 평균
-                f"{profitability_avg:.1f}점", #수익성 평균
-                f"{efficiency_avg:.1f}점", #효율성 평균,
+                f"{growth_avg}점" if growth_avg != "N/A" else "N/A",
+                f"{stability_avg}점" if stability_avg != "N/A" else "N/A",
+                f"{profitability_avg}점" if profitability_avg != "N/A" else "N/A",
+                f"{efficiency_avg}점" if efficiency_avg != "N/A" else "N/A"
             ]
             
             # 데이터 업데이트 후 셀 스타일 적용
@@ -2968,6 +2982,7 @@ class FinancialMetricsDialog(QDialog):
         }
         valid_efficiency_scores = [score for score in self.efficiency_scores.values() if score != 0]
         self.efficiency_average = sum(valid_efficiency_scores) / len(valid_efficiency_scores) if valid_efficiency_scores else 0
+        
 
     @staticmethod
     def calculate_growth_rate(current, previous):
